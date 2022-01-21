@@ -1,0 +1,2 @@
+
+MP_DECLARE_CONST_FUN_OBJ_0(epd47_make_new_obj);

@@ -1,0 +1,154 @@
+Index: LilyGo-EPD47/src/epd_driver.c
+===================================================================
+--- LilyGo-EPD47.orig/src/epd_driver.c
++++ LilyGo-EPD47/src/epd_driver.c
+@@ -65,9 +65,9 @@ void epd_init()
+     skipping = 0;
+     epd_base_init(EPD_WIDTH);
+ 
+-    conversion_lut = (uint8_t *)heap_caps_malloc(1 << 16, MALLOC_CAP_8BIT);
++    conversion_lut = (uint8_t *)malloc(1 << 16);
+     assert(conversion_lut != NULL);
+-    output_queue = xQueueCreate(64, EPD_WIDTH / 2);
++    output_queue = xQueueCreate(32, EPD_WIDTH / 2);
+ }
+ 
+ // skip a display row
+@@ -140,7 +140,7 @@ void epd_push_pixels(Rect_t area, short
+ 
+ void epd_clear_area(Rect_t area)
+ {
+-    epd_clear_area_cycles(area, 4, 50);
++    epd_clear_area_cycles(area, 1, 50);
+ }
+ 
+ void epd_clear_area_cycles(Rect_t area, int cycles, int cycle_time)
+@@ -149,10 +149,10 @@ void epd_clear_area_cycles(Rect_t area,
+     const short dark_time = cycle_time;
+ 
+     for (int c = 0; c < cycles; c++) {
+-        for (int i = 0; i < 4; i++) {
++        for (int i = 0; i < 16; i++) {
+             epd_push_pixels(area, dark_time, 0);
+         }
+-        for (int i = 0; i < 4; i++) {
++        for (int i = 0; i < 16; i++) {
+             epd_push_pixels(area, white_time, 1);
+         }
+     }
+@@ -315,7 +315,7 @@ void IRAM_ATTR bit_shift_buffer_right(ui
+     }
+ }
+ 
+-inline uint32_t min(uint32_t x, uint32_t y)
++uint32_t min(uint32_t x, uint32_t y)
+ {
+     return x < y ? x : y;
+ }
+@@ -835,8 +835,8 @@ void IRAM_ATTR epd_draw_frame_1bit(Rect_
+ 
+ void IRAM_ATTR epd_draw_image(Rect_t area, uint8_t *data, enum DrawMode mode)
+ {
+-    uint8_t line[EPD_WIDTH / 2];
+-    memset(line, 255, EPD_WIDTH / 2);
++    // uint8_t line[EPD_WIDTH / 2];
++    // memset(line, 255, EPD_WIDTH / 2);
+     uint8_t frame_count = 15;
+ 
+     SemaphoreHandle_t fetch_sem = xSemaphoreCreateBinary();
+Index: LilyGo-EPD47/src/libjpeg/libjpeg.c
+===================================================================
+--- LilyGo-EPD47.orig/src/libjpeg/libjpeg.c
++++ LilyGo-EPD47/src/libjpeg/libjpeg.c
+@@ -6,9 +6,9 @@
+ 
+ #include "libjpeg.h"
+ 
+-#include "esp_heap_caps.h"
++// #include "esp_heap_caps.h"
+ #include "esp_log.h"
+-#include "esp_spiffs.h"
++// #include "esp_spiffs.h"
+ #include "esp_task_wdt.h"
+ #include "esp_timer.h"
+ 
+@@ -22,6 +22,7 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <math.h>
++#include <stdlib.h>
+ 
+ /******************************************************************************/
+ /***        macro definitions                                               ***/
+@@ -129,7 +130,7 @@ void libjpeg_init(uint8_t *fb_jpg_source
+     fb_jpg = fb_jpg_source;
+ 
+     //解码图像内存申请， 来自PSRAM
+-    decoded_image = (uint8_t *)heap_caps_malloc(EPD_WIDTH * EPD_HEIGHT, MALLOC_CAP_SPIRAM);
++    decoded_image = (uint8_t *)malloc(EPD_WIDTH * EPD_HEIGHT);
+     if (decoded_image == NULL)
+     {
+         ESP_LOGE(TAG, "Initial alloc back_buf failed!");
+@@ -137,7 +138,7 @@ void libjpeg_init(uint8_t *fb_jpg_source
+     memset(decoded_image, 255, EPD_WIDTH * EPD_HEIGHT);
+ 
+     // Should be big enough to allocate the JPEG file size
+-    jpeg_buf = (uint8_t *)heap_caps_malloc(EPD_WIDTH * EPD_HEIGHT, MALLOC_CAP_SPIRAM);
++    jpeg_buf = (uint8_t *)malloc(EPD_WIDTH * EPD_HEIGHT);
+     if (jpeg_buf == NULL)
+     {
+         ESP_LOGE(TAG, "Initial alloc jpeg_buf failed!");
+@@ -212,7 +213,6 @@ void show_jpg_from_buff(uint8_t *buff, u
+     memcpy(jpeg_buf, buff, buff_size);
+     ESP_LOGI(TAG, "jpeg size: %d Byte", buff_size);
+ 
+-    epd_poweron();
+     memset(decoded_image, 255, EPD_WIDTH * EPD_HEIGHT);
+ 
+     draw_jpeg(jpeg_buf, 0, 0);
+@@ -221,13 +221,9 @@ void show_jpg_from_buff(uint8_t *buff, u
+     time_update_screen = esp_timer_get_time();
+ #endif
+ 
+-    //清屏
+-    epd_clear();
+     //显示内容
+     epd_draw_grayscale_image(epd_full_screen(), fb_jpg);
+ 
+-    epd_poweroff();
+-
+ #if LIBJPEG_MEASURE
+     time_update_screen = (esp_timer_get_time() - time_update_screen) / 1000;
+     ESP_LOGI(TAG, "%d ms - screen", time_update_screen);
+@@ -535,4 +531,4 @@ int draw_jpeg_area(uint8_t *jpeg_buf, in
+ 
+ /******************************************************************************/
+ /***        END OF FILE                                                     ***/
+-/******************************************************************************/
+\ No newline at end of file
++/******************************************************************************/
+Index: LilyGo-EPD47/src/rmt_pulse.c
+===================================================================
+--- LilyGo-EPD47.orig/src/rmt_pulse.c
++++ LilyGo-EPD47/src/rmt_pulse.c
+@@ -3,7 +3,7 @@
+ #include <driver/rmt.h>
+  #include <esp_idf_version.h>
+  #if ESP_IDF_VERSION_MAJOR >= 4
+- #include <hal/rmt_ll.h>
++ // #include <hal/rmt_ll.h>
+  #endif
+ 
+ static intr_handle_t gRMT_intr_handle = NULL;
+@@ -52,7 +52,10 @@ void rmt_pulse_init(gpio_num_t pin)
+ 
+     rmt_config(&row_rmt_config);
+ #if ESP_IDF_VERSION_MAJOR >= 4
+-    rmt_ll_enable_tx_end_interrupt(&RMT, row_rmt_config.channel, true);
++    // rmt_ll_enable_tx_end_interrupt(&RMT, row_rmt_config.channel, true);
++    // RMT.int_ena.val &= ~(1 << (row_rmt_config.channel * 3));
++    // RMT.int_ena.val |= (true << (row_rmt_config.channel * 3));
++    rmt_set_tx_intr_en(row_rmt_config.channel, true);
+ #else
+     rmt_set_tx_intr_en(row_rmt_config.channel, true);
+ #endif

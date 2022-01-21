@@ -1,0 +1,5 @@
+.vscode
+build_dir
+tmp
+bin
+dl
