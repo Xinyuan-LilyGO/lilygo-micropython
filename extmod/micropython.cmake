@@ -6,3 +6,4 @@
 
 include(${CMAKE_CURRENT_LIST_DIR}/display/epd/src/micropython.cmake)
 
+include(${CMAKE_CURRENT_LIST_DIR}/network/gsm/src/micropython.cmake)

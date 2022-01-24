@@ -57,11 +57,11 @@ STATIC mp_obj_t gsm_make_new(mp_uint_t n_args, const mp_obj_t *pos_args, mp_map_
         {MP_QSTR_uart_num, MP_ARG_REQUIRED | MP_ARG_INT, {.u_int = -1}           },
         {MP_QSTR_tx,       MP_ARG_REQUIRED | MP_ARG_INT, {.u_int = -1}           },
         {MP_QSTR_rx,       MP_ARG_REQUIRED | MP_ARG_INT, {.u_int = -1}           },
-        {MP_QSTR_rts,      MP_ARG_KW_ONLY  | MP_ARG_INT,                  {.u_int = -1}           },
-        {MP_QSTR_cts,      MP_ARG_KW_ONLY  | MP_ARG_INT,                  {.u_int = -1}           },
-        {MP_QSTR_baudrate, MP_ARG_KW_ONLY  | MP_ARG_INT,                  {.u_int = 115200}       },
-        {MP_QSTR_apn,      MP_ARG_KW_ONLY  | MP_ARG_OBJ,                  {.u_obj = mp_const_none}},
-        {MP_QSTR_roaming,  MP_ARG_KW_ONLY  | MP_ARG_BOOL,                 {.u_bool = false}       },
+        {MP_QSTR_rts,      MP_ARG_KW_ONLY  | MP_ARG_INT, {.u_int = -1}           },
+        {MP_QSTR_cts,      MP_ARG_KW_ONLY  | MP_ARG_INT, {.u_int = -1}           },
+        {MP_QSTR_baudrate, MP_ARG_KW_ONLY  | MP_ARG_INT, {.u_int = 115200}       },
+        {MP_QSTR_apn,      MP_ARG_KW_ONLY  | MP_ARG_OBJ, {.u_obj = mp_const_none}},
+        {MP_QSTR_roaming,  MP_ARG_KW_ONLY  | MP_ARG_BOOL,{.u_bool = false}       },
     };
     mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
     int32_t err = 0;
