@@ -7,6 +7,7 @@
 #include "epd_driver.h"
 #include "ed097oc4.h"
 #include "libjpeg/libjpeg.h"
+#include "font/FiraSans.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -134,6 +135,51 @@ STATIC mp_obj_t epd47_jpeg(size_t n_args, const mp_obj_t *args)
 STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(epd47_jpeg_obj, 6, 6, epd47_jpeg);
 
 
+STATIC mp_obj_t epd47_text(mp_uint_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args)
+{
+    const mp_arg_t allowed_args[] = {
+        {MP_QSTR_text,      MP_ARG_REQUIRED | MP_ARG_OBJ, {.u_obj = mp_const_none} },
+        {MP_QSTR_cursorx,   MP_ARG_REQUIRED | MP_ARG_INT, {.u_int = -1}            },
+        {MP_QSTR_cursory,   MP_ARG_REQUIRED | MP_ARG_INT, {.u_int = -1}            },
+        // {MP_QSTR_font,      MP_ARG_KW_ONLY  | MP_ARG_OBJ, {.u_obj = mp_const_none} },
+        {MP_QSTR_font_size, MP_ARG_KW_ONLY  | MP_ARG_INT, {.u_int = 12}            },
+    };
+    mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
+
+    mp_arg_parse_all(n_args - 1, pos_args + 1, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
+
+    int x = args[1].u_int;
+    int y = args[2].u_int;
+    const GFXfont *gfx = &FiraSansRegular12pt;
+
+    if (args[0].u_obj == mp_const_none || x == -1 || y == -1)
+    {
+        return mp_const_none;
+    }
+
+    if (x < 0 || x > EPD_WIDTH || y < 0 || y > EPD_HEIGHT)
+    {
+        return mp_const_none;
+    }
+
+    if (args[3].u_int == 9)
+        gfx = &FiraSansRegular9pt;
+    if (args[3].u_int == 18)
+        gfx = &FiraSansRegular18pt;
+    if (args[3].u_int == 24)
+        gfx = &FiraSansRegular24pt;
+
+    writeln((GFXfont *)gfx,
+            mp_obj_str_get_str(args[0].u_obj),
+            &x,
+            &y,
+            NULL);
+
+    return mp_const_none;
+}
+STATIC MP_DEFINE_CONST_FUN_OBJ_KW(epd47_text_obj, 3, epd47_text);
+
+
 STATIC mp_obj_t epd47_clear(size_t n_args, const mp_obj_t *args)
 {
     Rect_t area = {.x = 0, .y = 0, .width = EPD_WIDTH, .height = EPD_HEIGHT};
@@ -167,12 +213,38 @@ STATIC mp_obj_t epd47_clear(size_t n_args, const mp_obj_t *args)
 STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(epd47_clear_obj, 1, 5, epd47_clear);
 
 
+STATIC mp_obj_t epd47_width(mp_obj_t self_in)
+{
+    return mp_obj_new_int(EPD_WIDTH);
+}
+STATIC MP_DEFINE_CONST_FUN_OBJ_1(epd47_width_obj, epd47_width);
+
+
+STATIC mp_obj_t epd47_height(mp_obj_t self_in)
+{
+    return mp_obj_new_int(EPD_HEIGHT);
+}
+STATIC MP_DEFINE_CONST_FUN_OBJ_1(epd47_height_obj, epd47_height);
+
+
+STATIC mp_obj_t epd47_delete(mp_obj_t self_in)
+{
+    epd_deinit();
+    return mp_const_none;
+}
+MP_DEFINE_CONST_FUN_OBJ_1(epd47_delete_obj, epd47_delete);
+
+
 STATIC const mp_rom_map_elem_t epd47_if_locals_dict_table[] = {
     // method
-    { MP_ROM_QSTR(MP_QSTR_power), MP_ROM_PTR(&epd47_power_obj) },
-    { MP_ROM_QSTR(MP_QSTR_bitmap), MP_ROM_PTR(&epd47_bitmap_obj) },
-    { MP_ROM_QSTR(MP_QSTR_jpeg), MP_ROM_PTR(&epd47_jpeg_obj) },
-    { MP_ROM_QSTR(MP_QSTR_clear), MP_ROM_PTR(&epd47_clear_obj) },
+    { MP_ROM_QSTR(MP_QSTR_power),   MP_ROM_PTR(&epd47_power_obj)  },
+    { MP_ROM_QSTR(MP_QSTR_bitmap),  MP_ROM_PTR(&epd47_bitmap_obj) },
+    { MP_ROM_QSTR(MP_QSTR_jpeg),    MP_ROM_PTR(&epd47_jpeg_obj)   },
+    { MP_ROM_QSTR(MP_QSTR_text),    MP_ROM_PTR(&epd47_text_obj)   },
+    { MP_ROM_QSTR(MP_QSTR_clear),   MP_ROM_PTR(&epd47_clear_obj)  },
+    { MP_ROM_QSTR(MP_QSTR_width),   MP_ROM_PTR(&epd47_width_obj)  },
+    { MP_ROM_QSTR(MP_QSTR_height),  MP_ROM_PTR(&epd47_height_obj) },
+    { MP_ROM_QSTR(MP_QSTR___del__), MP_ROM_PTR(&epd47_delete_obj) },
 };
 STATIC MP_DEFINE_CONST_DICT(epd47_if_locals_dict, epd47_if_locals_dict_table);
 
