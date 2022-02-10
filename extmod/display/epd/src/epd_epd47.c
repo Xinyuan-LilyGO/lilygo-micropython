@@ -1,8 +1,11 @@
 #include "py/obj.h"
 #include "py/runtime.h"
 #include "py/mphal.h"
+#include "py/mpthread.h"
+#include "py/stream.h"
 #include "py/objtype.h"
 #include "py/mperrno.h"
+#include "extmod/vfs.h"
 
 #include "epd_driver.h"
 #include "ed097oc4.h"
@@ -32,7 +35,7 @@ STATIC mp_obj_t epd47_make_new()
     }
 
     self->base.type = &epd47_if_type;
-#if 0
+
     self->jpeg_buf = m_malloc(540 * 960);
     if (!self->jpeg_buf)
     {
@@ -41,7 +44,7 @@ STATIC mp_obj_t epd47_make_new()
     }
 
     libjpeg_init(self->jpeg_buf);
-#endif
+
     return MP_OBJ_FROM_PTR(self);
 }
 MP_DEFINE_CONST_FUN_OBJ_0(epd47_make_new_obj, epd47_make_new);
@@ -99,40 +102,33 @@ STATIC mp_obj_t epd47_bitmap(size_t n_args, const mp_obj_t *args)
 STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(epd47_bitmap_obj, 6, 6, epd47_bitmap);
 
 
+//
+// jpeg file name
+// area.x
+// area.y
+//
 STATIC mp_obj_t epd47_jpeg(size_t n_args, const mp_obj_t *args)
 {
-    // epd47_if_obj_t *self = NULL;
+    int errcode;
+    mp_uint_t len;
     Rect_t area;
-    size_t len;
-    mp_obj_t *items;
-    uint8_t *data = NULL;
+    epd47_if_obj_t *self = MP_OBJ_TO_PTR(args[0]);
+    mp_obj_t vfs_args[2] = {
+        args[1],
+        MP_OBJ_NEW_QSTR(MP_QSTR_rb),
+    };
+    mp_obj_t o = mp_vfs_open(MP_ARRAY_SIZE(vfs_args), &vfs_args[0], (mp_map_t *)&mp_const_empty_map);
 
-    if (n_args < 2 || n_args > 6) return mp_const_none;
+    len = mp_stream_rw(o, self->jpeg_buf, 540 * 960, &errcode, MP_STREAM_RW_READ);
 
-    area.x      = mp_obj_get_int(args[2]);
-    area.y      = mp_obj_get_int(args[3]);
-    area.width  = mp_obj_get_int(args[4]);
-    area.height = mp_obj_get_int(args[5]);
+    area.x = mp_obj_get_int(args[2]);
+    area.y = mp_obj_get_int(args[3]);
 
-    mp_obj_list_get(args[1], &len, &items);
-    data = m_malloc(len);
-    if (!data)
-    {
-        mp_printf(&mp_plat_print, "malloc fail\n");
-        mp_raise_TypeError(MP_ERROR_TEXT("malloc fail"));
-        return mp_const_none;
-    }
-    mp_printf(&mp_plat_print, "len: %d\n", len);
-    for (size_t i = 0; i < len; i++)
-    {
-        data[i] = mp_obj_get_int(items[i]);
-    }
+    show_area_jpg_from_buff(self->jpeg_buf, len, area);
 
-    show_area_jpg_from_buff(data, len, area);
-    m_free(data);
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(epd47_jpeg_obj, 6, 6, epd47_jpeg);
+STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(epd47_jpeg_obj, 2, 4, epd47_jpeg);
 
 
 STATIC mp_obj_t epd47_text(mp_uint_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args)
@@ -229,7 +225,10 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(epd47_height_obj, epd47_height);
 
 STATIC mp_obj_t epd47_delete(mp_obj_t self_in)
 {
+    epd47_if_obj_t *self = MP_OBJ_TO_PTR(self_in);
     epd_deinit();
+    libjpeg_deinit();
+    m_free(self->jpeg_buf);
     return mp_const_none;
 }
 MP_DEFINE_CONST_FUN_OBJ_1(epd47_delete_obj, epd47_delete);
