@@ -56,77 +56,6 @@ Index: LilyGo-EPD47/src/epd_driver.c
      uint8_t frame_count = 15;
  
      SemaphoreHandle_t fetch_sem = xSemaphoreCreateBinary();
-Index: LilyGo-EPD47/src/libjpeg/libjpeg.c
-===================================================================
---- LilyGo-EPD47.orig/src/libjpeg/libjpeg.c
-+++ LilyGo-EPD47/src/libjpeg/libjpeg.c
-@@ -6,9 +6,9 @@
- 
- #include "libjpeg.h"
- 
--#include "esp_heap_caps.h"
-+// #include "esp_heap_caps.h"
- #include "esp_log.h"
--#include "esp_spiffs.h"
-+// #include "esp_spiffs.h"
- #include "esp_task_wdt.h"
- #include "esp_timer.h"
- 
-@@ -22,6 +22,7 @@
- #include <stdio.h>
- #include <string.h>
- #include <math.h>
-+#include <stdlib.h>
- 
- /******************************************************************************/
- /***        macro definitions                                               ***/
-@@ -129,7 +130,7 @@ void libjpeg_init(uint8_t *fb_jpg_source
-     fb_jpg = fb_jpg_source;
- 
-     //解码图像内存申请， 来自PSRAM
--    decoded_image = (uint8_t *)heap_caps_malloc(EPD_WIDTH * EPD_HEIGHT, MALLOC_CAP_SPIRAM);
-+    decoded_image = (uint8_t *)malloc(EPD_WIDTH * EPD_HEIGHT);
-     if (decoded_image == NULL)
-     {
-         ESP_LOGE(TAG, "Initial alloc back_buf failed!");
-@@ -137,7 +138,7 @@ void libjpeg_init(uint8_t *fb_jpg_source
-     memset(decoded_image, 255, EPD_WIDTH * EPD_HEIGHT);
- 
-     // Should be big enough to allocate the JPEG file size
--    jpeg_buf = (uint8_t *)heap_caps_malloc(EPD_WIDTH * EPD_HEIGHT, MALLOC_CAP_SPIRAM);
-+    jpeg_buf = (uint8_t *)malloc(EPD_WIDTH * EPD_HEIGHT);
-     if (jpeg_buf == NULL)
-     {
-         ESP_LOGE(TAG, "Initial alloc jpeg_buf failed!");
-@@ -212,7 +213,6 @@ void show_jpg_from_buff(uint8_t *buff, u
-     memcpy(jpeg_buf, buff, buff_size);
-     ESP_LOGI(TAG, "jpeg size: %d Byte", buff_size);
- 
--    epd_poweron();
-     memset(decoded_image, 255, EPD_WIDTH * EPD_HEIGHT);
- 
-     draw_jpeg(jpeg_buf, 0, 0);
-@@ -221,13 +221,9 @@ void show_jpg_from_buff(uint8_t *buff, u
-     time_update_screen = esp_timer_get_time();
- #endif
- 
--    //清屏
--    epd_clear();
-     //显示内容
-     epd_draw_grayscale_image(epd_full_screen(), fb_jpg);
- 
--    epd_poweroff();
--
- #if LIBJPEG_MEASURE
-     time_update_screen = (esp_timer_get_time() - time_update_screen) / 1000;
-     ESP_LOGI(TAG, "%d ms - screen", time_update_screen);
-@@ -535,4 +531,4 @@ int draw_jpeg_area(uint8_t *jpeg_buf, in
- 
- /******************************************************************************/
- /***        END OF FILE                                                     ***/
--/******************************************************************************/
-\ No newline at end of file
-+/******************************************************************************/
 Index: LilyGo-EPD47/src/rmt_pulse.c
 ===================================================================
 --- LilyGo-EPD47.orig/src/rmt_pulse.c
@@ -136,7 +65,7 @@ Index: LilyGo-EPD47/src/rmt_pulse.c
   #include <esp_idf_version.h>
   #if ESP_IDF_VERSION_MAJOR >= 4
 - #include <hal/rmt_ll.h>
-+ // #include <hal/rmt_ll.h>
++//  #include <hal/rmt_ll.h>
   #endif
  
  static intr_handle_t gRMT_intr_handle = NULL;
@@ -152,3 +81,16 @@ Index: LilyGo-EPD47/src/rmt_pulse.c
  #else
      rmt_set_tx_intr_en(row_rmt_config.channel, true);
  #endif
+Index: LilyGo-EPD47/src/libjpeg/libjpeg.c
+===================================================================
+--- LilyGo-EPD47.orig/src/libjpeg/libjpeg.c
++++ LilyGo-EPD47/src/libjpeg/libjpeg.c
+@@ -8,7 +8,7 @@
+ 
+ #include "esp_heap_caps.h"
+ #include "esp_log.h"
+-#include "esp_spiffs.h"
++// #include "esp_spiffs.h"
+ #include "esp_task_wdt.h"
+ #include "esp_timer.h"
+ 

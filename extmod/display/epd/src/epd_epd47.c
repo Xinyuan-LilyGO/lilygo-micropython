@@ -43,7 +43,7 @@ STATIC mp_obj_t epd47_make_new()
         return mp_const_none;
     }
 
-    libjpeg_init(self->jpeg_buf);
+    libjpeg_init();
 
     return MP_OBJ_FROM_PTR(self);
 }
@@ -124,7 +124,7 @@ STATIC mp_obj_t epd47_jpeg(size_t n_args, const mp_obj_t *args)
     area.x = mp_obj_get_int(args[2]);
     area.y = mp_obj_get_int(args[3]);
 
-    show_area_jpg_from_buff(self->jpeg_buf, len, area);
+    show_jpg_from_buff(self->jpeg_buf, len, area);
 
     return mp_const_none;
 }

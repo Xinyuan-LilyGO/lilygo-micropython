@@ -2,11 +2,10 @@ Index: LilyGo-EPD47/src/ed097oc4.c
 ===================================================================
 --- LilyGo-EPD47.orig/src/ed097oc4.c
 +++ LilyGo-EPD47/src/ed097oc4.c
-@@ -106,6 +106,15 @@ void epd_base_init(uint32_t epd_row_widt
+@@ -106,6 +106,14 @@ void epd_base_init(uint32_t epd_row_widt
    rmt_pulse_init(CKV);
  }
  
-+
 +void epd_base_deinit()
 +{
 +    while (rmt_busy()) ;

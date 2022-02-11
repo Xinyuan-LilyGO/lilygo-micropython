@@ -11,105 +11,21 @@ Index: LilyGo-EPD47/src/libjpeg/libjpeg.c
  #include <stdio.h>
  #include <string.h>
  #include <math.h>
-@@ -73,7 +75,7 @@ uint32_t tjd_output(JDEC *jd, void *bitm
-  */
- int draw_jpeg(uint8_t *jpeg_buf, int xpos, int ypos);
- 
--int draw_jpeg_area(uint8_t *jpeg_buf, int xpos, int ypos, Rect_t area);
-+int draw_jpeg_area(uint8_t *jpeg_buf, int xpos, int ypos, Rect_t *area);
- 
- /******************************************************************************/
- /***        exported variables                                              ***/
-@@ -130,7 +132,7 @@ void libjpeg_init(uint8_t *fb_jpg_source
-     fb_jpg = fb_jpg_source;
- 
+@@ -126,7 +128,7 @@ const char *TAG = "LIB_JPEG";
+ void libjpeg_init(void)
+ {
      //解码图像内存申请， 来自PSRAM
--    decoded_image = (uint8_t *)malloc(EPD_WIDTH * EPD_HEIGHT);
+-    decoded_image = (uint8_t *)heap_caps_malloc(EPD_WIDTH * EPD_HEIGHT, MALLOC_CAP_SPIRAM);
 +    decoded_image = (uint8_t *)m_malloc(EPD_WIDTH * EPD_HEIGHT);
      if (decoded_image == NULL)
      {
-         ESP_LOGE(TAG, "Initial alloc back_buf failed!");
-@@ -138,7 +140,7 @@ void libjpeg_init(uint8_t *fb_jpg_source
-     memset(decoded_image, 255, EPD_WIDTH * EPD_HEIGHT);
+         ESP_LOGE(TAG, "Initial alloc decoded_image failed!");
+@@ -222,7 +224,7 @@ void show_jpg_from_buff(uint8_t *buff, u
  
-     // Should be big enough to allocate the JPEG file size
--    jpeg_buf = (uint8_t *)malloc(EPD_WIDTH * EPD_HEIGHT);
-+    jpeg_buf = (uint8_t *)m_malloc(EPD_WIDTH * EPD_HEIGHT);
-     if (jpeg_buf == NULL)
-     {
-         ESP_LOGE(TAG, "Initial alloc jpeg_buf failed!");
-@@ -152,6 +154,13 @@ void libjpeg_init(uint8_t *fb_jpg_source
- }
- 
- 
-+void libjpeg_deinit(void)
-+{
-+    m_free(decoded_image);
-+    m_free(jpeg_buf);
-+}
-+
-+
- // TODO
- #if 0
- void show_jpg_from_spiffs(const char *fn)
-@@ -243,10 +252,9 @@ void show_area_jpg_from_buff(uint8_t *bu
-     memcpy(jpeg_buf, buff, buff_size);
-     ESP_LOGI(TAG, "jpeg size: %d Byte", buff_size);
- 
--    epd_poweron();
-     memset(decoded_image, 255, EPD_WIDTH * EPD_HEIGHT);
- 
--    draw_jpeg_area(jpeg_buf, 0, 0, area);
-+    draw_jpeg_area(jpeg_buf, 0, 0, &area);
- 
- #if LIBJPEG_MEASURE
-     time_update_screen = esp_timer_get_time();
-@@ -257,8 +265,6 @@ void show_area_jpg_from_buff(uint8_t *bu
-     //显示内容
-     epd_draw_grayscale_image(area, fb_jpg);
- 
--    epd_poweroff();
--
- #if LIBJPEG_MEASURE
-     time_update_screen = (esp_timer_get_time() - time_update_screen) / 1000;
-     ESP_LOGI(TAG, "%d ms - screen", time_update_screen);
-@@ -491,7 +497,7 @@ int draw_jpeg(uint8_t *jpeg_buf, int xpo
- }
- 
- 
--int draw_jpeg_area(uint8_t *jpeg_buf, int xpos, int ypos, Rect_t area)
-+int draw_jpeg_area(uint8_t *jpeg_buf, int xpos, int ypos, Rect_t *area)
+ void libjpeg_deinit(void)
  {
-     JDEC jd;
-     JRESULT rc;
-@@ -505,6 +511,9 @@ int draw_jpeg_area(uint8_t *jpeg_buf, in
-         return ESP_FAIL;
-     }
- 
-+    area->width = jd.width;
-+    area->height = jd.height;
-+
- #if LIBJPEG_MEASURE
-     uint32_t decode_start = esp_timer_get_time();
- #endif
-@@ -523,7 +532,7 @@ int draw_jpeg_area(uint8_t *jpeg_buf, in
- #endif
- 
-     // Render the image onto the screen at given coordinates
--    jpeg_render_area(xpos, ypos, jd.width, jd.height, area);
-+    jpeg_render_area(xpos, ypos, jd.width, jd.height, *area);
- 
-     return 1;
+-    free(decoded_image);
++    m_free(decoded_image);
  }
-Index: LilyGo-EPD47/src/libjpeg/libjpeg.h
-===================================================================
---- LilyGo-EPD47.orig/src/libjpeg/libjpeg.h
-+++ LilyGo-EPD47/src/libjpeg/libjpeg.h
-@@ -44,6 +44,7 @@ void libjpeg_init(uint8_t *fb_source);
- void show_jpg_from_buff(uint8_t *buff, uint32_t buff_size);
- void show_area_jpg_from_buff(uint8_t *buff, uint32_t buff_size, Rect_t area);
- void show_jpg_from_spiffs(const char *fn);
-+void libjpeg_deinit(void);
  
- #ifdef __cplusplus
- }
+ /******************************************************************************/
