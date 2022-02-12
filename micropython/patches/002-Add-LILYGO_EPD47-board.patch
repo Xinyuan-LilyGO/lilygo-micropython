@@ -1,0 +1,29 @@
+Index: micropython/ports/esp32/boards/LILYGO_EPD47/mpconfigboard.cmake
+===================================================================
+--- /dev/null
++++ micropython/ports/esp32/boards/LILYGO_EPD47/mpconfigboard.cmake
+@@ -0,0 +1,15 @@
++set(SDKCONFIG_DEFAULTS
++    boards/sdkconfig.base
++    boards/sdkconfig.ble
++    boards/sdkconfig.spiram
++    #boards/GENERIC_SPIRAM/sdkconfig.board
++)
++
++if(NOT MICROPY_FROZEN_MANIFEST)
++    set(MICROPY_FROZEN_MANIFEST
++        ${MICROPY_PORT_DIR}/boards/manifest.py
++        $(EXTMOD_FROZEN_DIR)/tp/manifest.py
++    )
++endif()
++
++set(EXTMOD_EPD 1)
+\ No newline at end of file
+Index: micropython/ports/esp32/boards/LILYGO_EPD47/mpconfigboard.h
+===================================================================
+--- /dev/null
++++ micropython/ports/esp32/boards/LILYGO_EPD47/mpconfigboard.h
+@@ -0,0 +1,2 @@
++#define MICROPY_HW_BOARD_NAME "ESP32 LILYGO EPD47"
++#define MICROPY_HW_MCU_NAME "ESP32"
+\ No newline at end of file
