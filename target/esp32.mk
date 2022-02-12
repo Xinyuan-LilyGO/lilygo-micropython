@@ -26,6 +26,7 @@ endef
 ## $(1) MODULES
 ##
 define esp32/compile
+	$(TARGET_BUILD_DIR)/esp-idf/install.sh
 	. $(TARGET_BUILD_DIR)/esp-idf/export.sh && \
 	make -C $(BUILD_DIR)/micropython/ports/esp32 \
 			BOARD=$(BOARD) BUILD=$(BUILD_DIR)/$(TARGET)/$(BOARD) \
