@@ -29,8 +29,8 @@ define esp32/compile
 	. $(TARGET_BUILD_DIR)/esp-idf/export.sh && \
 	make -C $(BUILD_DIR)/micropython/ports/esp32 \
 			BOARD=$(BOARD) BUILD=$(BUILD_DIR)/$(TARGET)/$(BOARD) \
-			USER_C_MODULES=$(TOP_DIR)/extmod/micropython.cmake
-
+			USER_C_MODULES=$(TOP_DIR)/extmod/micropython.cmake \
+			EXTMOD_FROZEN_DIR=$(TOP_DIR)/extmod
 endef
 
 
