@@ -13,7 +13,7 @@ Index: micropython/ports/esp32/boards/LILYGO_EPD47/mpconfigboard.cmake
 +if(NOT MICROPY_FROZEN_MANIFEST)
 +    set(MICROPY_FROZEN_MANIFEST
 +        ${MICROPY_PORT_DIR}/boards/manifest.py
-+        $(EXTMOD_FROZEN_DIR)/tp/manifest.py
++        $(EXTMOD_FROZEN_DIR)/touch/manifest.py
 +    )
 +endif()
 +
