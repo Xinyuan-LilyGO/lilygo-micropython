@@ -12,9 +12,24 @@ sudo apt-get install git make python3 python3-pip cmake
 
 ## Build
 
+### T-SIM7000G
+
 ```shell
+$ cp config_T-SIM7000G config
 $ make
 ```
+
+### T5-4.7
+
+```shell
+$ cp config_T5-4.7 config
+$ make
+```
+
+## Supported Boards
+
+- TTGO T-SIM7000G
+- TTGO T5-4.7
 
 ## Modules
 
