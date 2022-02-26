@@ -19,12 +19,11 @@ if __name__ == "__main__":
             sleep(1)
 
     GSM_PWR = Pin(4, Pin.OUT)
-    # power(True)
+    power(True)
 
     uart = UART(1, baudrate=115200, rx=26, tx=27)
     g = constructAT(SIM7000)(uart)
     print(g)
-    #g = GSM(uart)
     g.connect()
 
     while True:

@@ -23,7 +23,6 @@ if __name__ == "__main__":
     uart = UART(1, baudrate=115200, rx=26, tx=27)
     g = constructAT(SIM7000)(uart)
     print(g)
-    #g = GSM(uart)
     g.connect()
 
     g.sendCmd("AT+SGPIO=0,4,1,1");
