@@ -26,10 +26,18 @@ $ cp config_T5-4.7 config
 $ make
 ```
 
+### T-T-CALL SIM800
+
+```shell
+$ cp config_T-CALL config
+$ make
+```
+
 ## Supported Boards
 
 - TTGO T-SIM7000G
 - TTGO T5-4.7
+- TTGO T-T-CALL SIM800
 
 ## Modules
 
