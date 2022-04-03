@@ -44,3 +44,7 @@ $ make
 ### Display Module
 
 [LilyGo-EPD47 using in micropython](./extmod/display/epd/README.md)
+
+## Interesting Project
+
+[LilyGo-EPD-4-7-OWM-Weather-Display](https://github.com/Xinyuan-LilyGO/LilyGo-EPD-4-7-OWM-Weather-Display/tree/web/micropython): Using the LilyGo EPD 4.7" display to show OWM Weather Data
