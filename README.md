@@ -26,18 +26,27 @@ $ cp config_T5-4.7 config
 $ make
 ```
 
-### T-T-CALL SIM800
+### T-CALL SIM800
 
 ```shell
 $ cp config_T-CALL config
 $ make
 ```
 
+### T-PicoC3
+
+```shell
+$ cp config_T-PicoC3 config
+$ sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
+$ make
+```
+
 ## Supported Boards
 
-- TTGO T-SIM7000G
-- TTGO T5-4.7
-- TTGO T-T-CALL SIM800
+- LilyGo T-SIM7000G
+- LilyGo T5-4.7
+- LilyGo T-T-CALL SIM800
+- LilyGo T-PicoC3
 
 ## Modules
 

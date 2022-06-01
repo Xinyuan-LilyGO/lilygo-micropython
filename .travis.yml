@@ -1,0 +1,21 @@
+language: c
+
+branches:
+  only:
+    - master
+
+
+jobs:
+  include:
+    - stage: micropython_build
+      env: NAME="micropython build"
+      install:
+        - sudo apt-get update
+        - sudo apt-get install git make python3 python3-pip cmake
+      script:
+        - cp config_T5-4.7 config
+        - make
+        - cp config_T-CALL config
+        - make
+        - cp config_T-SIM7000G config
+        - make

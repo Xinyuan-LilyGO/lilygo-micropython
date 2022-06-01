@@ -28,8 +28,8 @@ endef
 define esp32/compile
 	$(TARGET_BUILD_DIR)/esp-idf/install.sh
 	. $(TARGET_BUILD_DIR)/esp-idf/export.sh && \
-	make -C $(BUILD_DIR)/micropython/ports/esp32 \
-			BOARD=$(BOARD) BUILD=$(BUILD_DIR)/$(TARGET)/$(BOARD) \
+	make -C $(TARGET_BUILD_DIR)/micropython/ports/esp32 \
+			BOARD=$(BOARD) BUILD=$(TARGET_BUILD_DIR)/$(BOARD) \
 			USER_C_MODULES=$(TOP_DIR)/extmod/micropython.cmake \
 			EXTMOD_FROZEN_DIR=$(TOP_DIR)/extmod
 endef
@@ -38,7 +38,7 @@ endef
 define esp32/install
 	[ -d $(BIN_DIR) ] && mkdir -p $(BIN_DIR)/esp32/$(BOARD)
 	img_name=LilyGo-MicroPython_$(TARGET)_$(BOARD) && \
-	cd $(BUILD_DIR)/micropython && \
+	cd $(TARGET_BUILD_DIR)/micropython && \
 	micropython_version=`git show -s --pretty=format:%h` && \
 	img_name=$${img_name}_MPY-$${micropython_version} && \
 	cd $(TARGET_BUILD_DIR)/$(PKG_NAME) && \
