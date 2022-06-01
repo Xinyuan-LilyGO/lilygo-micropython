@@ -34,14 +34,13 @@ endef
 ##
 ##
 define Package/patches
+	cd $(1) ; \
+	quilt import $(2)/* ; \
+	quilt push -a ; \
+	cd - ; \
 	for patch in `ls $(2)` ; \
 	do \
 		if [ ! -e $(1)/prereq_$$patch ]; then \
-			cd $(1) && \
-			git apply --stat $(2)/$$patch && \
-			git apply --check $(2)/$$patch && \
-			git apply $(2)/$$patch && \
-			cd - && \
 			touch $(1)/prereq_$$patch ; \
 		fi ; \
 	done
