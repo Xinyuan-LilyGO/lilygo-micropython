@@ -27,6 +27,7 @@ jobs:
         path: dl/
 
   build_t-picoc3:
+    needs: build_t-call
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
@@ -43,6 +44,7 @@ jobs:
         make
 
   build_t-sim7000g:
+    needs: build_t-call
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
@@ -58,6 +60,7 @@ jobs:
         make
 
   build_t-t5-47:
+    needs: build_t-call
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
@@ -73,6 +76,7 @@ jobs:
         make
 
   build_t-t5-47-plus:
+    needs: build_t-call
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
