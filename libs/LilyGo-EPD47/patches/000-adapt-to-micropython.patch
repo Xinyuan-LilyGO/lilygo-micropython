@@ -1,0 +1,61 @@
+Index: LilyGo-EPD47/src/epd_driver.c
+===================================================================
+--- LilyGo-EPD47.orig/src/epd_driver.c
++++ LilyGo-EPD47/src/epd_driver.c
+@@ -156,9 +156,9 @@ void epd_init()
+     skipping = 0;
+     epd_base_init(EPD_WIDTH);
+ 
+-    conversion_lut = (uint8_t *)heap_caps_malloc(1 << 16, MALLOC_CAP_8BIT);
++    conversion_lut = (uint8_t *)malloc(1 << 16);
+     assert(conversion_lut != NULL);
+-    output_queue = xQueueCreate(64, EPD_WIDTH / 2);
++    output_queue = xQueueCreate(32, EPD_WIDTH / 2);
+ }
+ 
+ 
+@@ -213,7 +213,7 @@ void epd_push_pixels(Rect_t area, int16_
+ 
+ void epd_clear_area(Rect_t area)
+ {
+-    epd_clear_area_cycles(area, 4, 50);
++    epd_clear_area_cycles(area, 1, 50);
+ }
+ 
+ 
+@@ -224,11 +224,11 @@ void epd_clear_area_cycles(Rect_t area,
+ 
+     for (int32_t c = 0; c < cycles; c++)
+     {
+-        for (int32_t i = 0; i < 4; i++)
++        for (int32_t i = 0; i < 16; i++)
+         {
+             epd_push_pixels(area, dark_time, 0);
+         }
+-        for (int32_t i = 0; i < 4; i++)
++        for (int32_t i = 0; i < 16; i++)
+         {
+             epd_push_pixels(area, white_time, 1);
+         }
+@@ -295,7 +295,7 @@ void IRAM_ATTR calc_epd_input_1bpp(uint8
+ }
+ 
+ 
+-inline uint32_t min(uint32_t x, uint32_t y)
++uint32_t min(uint32_t x, uint32_t y)
+ {
+     return x < y ? x : y;
+ }
+Index: LilyGo-EPD47/src/libjpeg/libjpeg.c
+===================================================================
+--- LilyGo-EPD47.orig/src/libjpeg/libjpeg.c
++++ LilyGo-EPD47/src/libjpeg/libjpeg.c
+@@ -8,7 +8,7 @@
+ 
+ #include "esp_heap_caps.h"
+ #include "esp_log.h"
+-#include "esp_spiffs.h"
++// #include "esp_spiffs.h"
+ #include "esp_task_wdt.h"
+ #include "esp_timer.h"
+ 

@@ -5,10 +5,11 @@
 #include "py/stream.h"
 #include "py/objtype.h"
 #include "py/mperrno.h"
+#include "py/gc.h"
 #include "extmod/vfs.h"
 
 #include "epd_driver.h"
-#include "ed097oc4.h"
+#include "ed047tc1.h"
 #include "libjpeg/libjpeg.h"
 #include "font/FiraSans.h"
 
@@ -25,6 +26,16 @@ const mp_obj_type_t epd47_if_type;
 
 STATIC mp_obj_t epd47_make_new()
 {
+    /**
+     * When using del obj to destroy the current object, the epd47_delete()
+     * method will not be called immediately, resulting in hardware resources
+     * not being destroyed in time. It is necessary to call gc_collect() to
+     * destroy the previous hardware resources when creating the object,
+     * or use obj.deinit() to destroy the corresponding hardware resources in
+     * micropython.
+     */
+    gc_collect();
+
     epd_init();
 
     epd47_if_obj_t *self = m_new_obj_with_finaliser(epd47_if_obj_t);
@@ -226,6 +237,7 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(epd47_height_obj, epd47_height);
 STATIC mp_obj_t epd47_delete(mp_obj_t self_in)
 {
     epd47_if_obj_t *self = MP_OBJ_TO_PTR(self_in);
+
     epd_deinit();
     libjpeg_deinit();
     m_free(self->jpeg_buf);
@@ -243,6 +255,7 @@ STATIC const mp_rom_map_elem_t epd47_if_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_clear),   MP_ROM_PTR(&epd47_clear_obj)  },
     { MP_ROM_QSTR(MP_QSTR_width),   MP_ROM_PTR(&epd47_width_obj)  },
     { MP_ROM_QSTR(MP_QSTR_height),  MP_ROM_PTR(&epd47_height_obj) },
+    { MP_ROM_QSTR(MP_QSTR_deinit),  MP_ROM_PTR(&epd47_delete_obj) },
     { MP_ROM_QSTR(MP_QSTR___del__), MP_ROM_PTR(&epd47_delete_obj) },
 };
 STATIC MP_DEFINE_CONST_DICT(epd47_if_locals_dict, epd47_if_locals_dict_table);
@@ -250,5 +263,6 @@ STATIC MP_DEFINE_CONST_DICT(epd47_if_locals_dict, epd47_if_locals_dict_table);
 const mp_obj_type_t epd47_if_type = {
     { &mp_type_type },
     .name = MP_QSTR_EPD47,
+    .make_new = epd47_make_new,
     .locals_dict = (mp_obj_dict_t *)&epd47_if_locals_dict,
 };

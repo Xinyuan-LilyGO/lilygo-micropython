@@ -1,0 +1,147 @@
+Index: LilyGo-EPD47/src/epd_driver.c
+===================================================================
+--- LilyGo-EPD47.orig/src/epd_driver.c
++++ LilyGo-EPD47/src/epd_driver.c
+@@ -5,6 +5,7 @@
+ #include "epd_driver.h"
+ #include "ed047tc1.h"
+ 
++#include <sdkconfig.h>
+ #include <freertos/FreeRTOS.h>
+ #include <freertos/queue.h>
+ #include <freertos/semphr.h>
+@@ -39,6 +40,12 @@
+     }
+ #endif
+ 
++#if CONFIG_IDF_TARGET_ESP32 == 1
++#define USER_I2S_REG 1
++#elif CONFIG_IDF_TARGET_ESP32S3 == 1
++#define USER_I2S_REG 0
++#endif
++
+ /******************************************************************************/
+ /***        type definitions                                                ***/
+ /******************************************************************************/
+Index: LilyGo-EPD47/src/i2s_data_bus.c
+===================================================================
+--- LilyGo-EPD47.orig/src/i2s_data_bus.c
++++ LilyGo-EPD47/src/i2s_data_bus.c
+@@ -5,21 +5,29 @@
+ 
+ #include "i2s_data_bus.h"
+ 
+-#include <driver/periph_ctrl.h>
++#include <sdkconfig.h>
++#include <esp_err.h>
++#include <esp_log.h>
+ #include <esp_heap_caps.h>
++#if CONFIG_IDF_TARGET_ESP32 == 1
++#include <driver/periph_ctrl.h>
+ #include <rom/lldesc.h>
+ #include <soc/i2s_reg.h>
+ #include <soc/i2s_struct.h>
+ #include <soc/rtc.h>
+-#include "esp_lcd_panel_io.h"
+-#include "esp_err.h"
+-#include "esp_log.h"
++#elif CONFIG_IDF_TARGET_ESP32S3 == 1
++#include <esp_lcd_panel_io.h>
++#endif
+ 
+ /******************************************************************************/
+ /***        macro definitions                                               ***/
+ /******************************************************************************/
+ 
++#if CONFIG_IDF_TARGET_ESP32 == 1
++#define USER_I2S_REG 1
++#elif CONFIG_IDF_TARGET_ESP32S3 == 1
+ #define USER_I2S_REG 0
++#endif
+ 
+ /******************************************************************************/
+ /***        type definitions                                                ***/
+@@ -30,6 +38,7 @@ static const char *TAG = "I80";
+ /// DMA descriptors for front and back line buffer.
+ /// We use two buffers, so one can be filled while the other
+ /// is transmitted.
++#if USER_I2S_REG == 1
+ typedef struct
+ {
+     volatile lldesc_t *dma_desc_a;
+@@ -39,6 +48,7 @@ typedef struct
+     uint8_t *buf_a;
+     uint8_t *buf_b;
+ } i2s_parallel_state_t;
++#endif
+ 
+ /******************************************************************************/
+ /***        local function prototypes                                       ***/
+@@ -47,6 +57,7 @@ typedef struct
+ /**
+  * @brief Initializes a DMA descriptor.
+  */
++#if USER_I2S_REG == 1
+ static void fill_dma_desc(volatile lldesc_t *dmadesc, uint8_t *buf, i2s_bus_config *cfg);
+ 
+ /**
+@@ -64,6 +75,7 @@ static void gpio_setup_out(int32_t gpio,
+  * @brief Resets "Start Pulse" signal when the current row output is done.
+  */
+ static void IRAM_ATTR i2s_int_hdl(void *arg);
++#endif
+ 
+ /******************************************************************************/
+ /***        exported variables                                              ***/
+@@ -73,6 +85,7 @@ static void IRAM_ATTR i2s_int_hdl(void *
+ /***        local variables                                                 ***/
+ /******************************************************************************/
+ 
++#if USER_I2S_REG == 1
+ /**
+  * @brief Indicates which line buffer is currently back / front.
+  */
+@@ -84,22 +97,27 @@ static int32_t current_buffer = 0;
+ static i2s_parallel_state_t i2s_state;
+ 
+ static intr_handle_t gI2S_intr_handle = NULL;
++#endif
+ 
+ /**
+  * @brief Indicates the device has finished its transmission and is ready again.
+  */
+ static volatile bool output_done = true;
+ 
++#if USER_I2S_REG == 1
+ /**
+  * @brief The start pulse pin extracted from the configuration for use in
+  *        the "done" interrupt.
+  */
+ static gpio_num_t start_pulse_pin;
++#endif
+ 
+ static uint8_t buffer[(960 + 32) / 4] = { 0 };
+ 
++#if USER_I2S_REG == 0
+ static esp_lcd_i80_bus_handle_t i80_bus = NULL;
+ static esp_lcd_panel_io_handle_t io_handle = NULL;
++#endif
+ 
+ /******************************************************************************/
+ /***        exported functions                                              ***/
+@@ -424,6 +442,7 @@ void i2s_deinit()
+ /***        local functions                                                 ***/
+ /******************************************************************************/
+ 
++#if USER_I2S_REG == 1
+ /// Initializes a DMA descriptor.
+ static void fill_dma_desc(volatile lldesc_t *dmadesc, uint8_t *buf,
+                           i2s_bus_config *cfg)
+@@ -459,7 +478,6 @@ static void gpio_setup_out(int32_t gpio,
+ }
+ 
+ 
+-#if USER_I2S_REG
+ /// Resets "Start Pulse" signal when the current row output is done.
+ static void IRAM_ATTR i2s_int_hdl(void *arg)
+ {
