@@ -11,7 +11,7 @@ on:
       - '**.MD'
 
 jobs:
-  build:
+  build_t-call:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
@@ -21,19 +21,67 @@ jobs:
       run: |
         cp config_T-CALL config
         make
+    - uses: actions/upload-artifact@v2
+      with:
+        name: dl
+        path: dl/
+
+  build_t-picoc3:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - uses: actions/download-artifact@v2
+      with:
+        name: dl
+        path: dl/
     - name: Build T-PicoC3
       run: |
         cp config_T-PicoC3 config
         sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
         make
+
+  build_t-sim7000g:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - uses: actions/download-artifact@v2
+      with:
+        name: dl
+        path: dl/
     - name: Build T-SIM7000G
       run: |
         cp config_T-SIM7000G config
         make
+
+  build_t-t5-47:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - uses: actions/download-artifact@v2
+      with:
+        name: dl
+        path: dl/
     - name: Build T5-4.7
       run: |
         cp config_T5-4.7 config
         make
+
+  build_t-t5-47-plus:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - uses: actions/download-artifact@v2
+      with:
+        name: dl
+        path: dl/
     - name: Build T5-4.7 Plus
       run: |
         cp config_T5-4.7-Plus config
