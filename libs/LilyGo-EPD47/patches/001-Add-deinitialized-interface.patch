@@ -1,43 +1,11 @@
-Index: LilyGo-EPD47/src/ed097oc4.c
-===================================================================
---- LilyGo-EPD47.orig/src/ed097oc4.c
-+++ LilyGo-EPD47/src/ed097oc4.c
-@@ -106,6 +106,14 @@ void epd_base_init(uint32_t epd_row_widt
-   rmt_pulse_init(CKV);
- }
- 
-+void epd_base_deinit()
-+{
-+    while (rmt_busy()) ;
-+    rmt_pulse_deinit();
-+    i2s_deinit();
-+}
-+
-+
- void epd_poweron() {
-   // POWERON
-   config_reg.ep_scan_direction = true;
-Index: LilyGo-EPD47/src/ed097oc4.h
-===================================================================
---- LilyGo-EPD47.orig/src/ed097oc4.h
-+++ LilyGo-EPD47/src/ed097oc4.h
-@@ -26,6 +26,7 @@
- #define D0 GPIO_NUM_33
- 
- void epd_base_init(uint32_t epd_row_width);
-+void epd_base_deinit();
- void epd_poweron();
- void epd_poweroff();
- 
 Index: LilyGo-EPD47/src/epd_driver.c
 ===================================================================
 --- LilyGo-EPD47.orig/src/epd_driver.c
 +++ LilyGo-EPD47/src/epd_driver.c
-@@ -70,6 +70,15 @@ void epd_init()
-     output_queue = xQueueCreate(32, EPD_WIDTH / 2);
+@@ -162,6 +162,14 @@ void epd_init()
  }
  
-+
+ 
 +void epd_deinit()
 +{
 +    epd_base_deinit();
@@ -46,31 +14,56 @@ Index: LilyGo-EPD47/src/epd_driver.c
 +}
 +
 +
- // skip a display row
- void skip_row(uint8_t pipeline_finish_time)
+ void epd_push_pixels(Rect_t area, int16_t time, int32_t color)
  {
+     uint8_t row[EPD_LINE_BYTES] = { 0 };
+Index: LilyGo-EPD47/src/ed047tc1.h
+===================================================================
+--- LilyGo-EPD47.orig/src/ed047tc1.h
++++ LilyGo-EPD47/src/ed047tc1.h
+@@ -82,6 +82,7 @@ extern "C" {
+ /******************************************************************************/
+ 
+ void epd_base_init(uint32_t epd_row_width);
++void epd_base_deinit();
+ void epd_poweron();
+ void epd_poweroff();
+ 
+@@ -138,4 +139,4 @@ void IRAM_ATTR epd_switch_buffer();
+ #endif
+ /******************************************************************************/
+ /***        END OF FILE                                                     ***/
+-/******************************************************************************/
+\ No newline at end of file
++/******************************************************************************/
 Index: LilyGo-EPD47/src/epd_driver.h
 ===================================================================
 --- LilyGo-EPD47.orig/src/epd_driver.h
 +++ LilyGo-EPD47/src/epd_driver.h
-@@ -65,6 +65,8 @@ typedef struct {
- /** Initialize the ePaper display */
+@@ -89,6 +89,8 @@ typedef struct
+  */
  void epd_init();
  
 +void epd_deinit();
 +
- /** Enable display power supply. */
- void epd_poweron();
- 
+ /**
+  * @brief Enable display power supply.
+  */
+@@ -395,4 +397,4 @@ void write_string(const GFXfont *font, c
+ #endif
+ /******************************************************************************/
+ /***        END OF FILE                                                     ***/
+-/******************************************************************************/
+\ No newline at end of file
++/******************************************************************************/
 Index: LilyGo-EPD47/src/rmt_pulse.c
 ===================================================================
 --- LilyGo-EPD47.orig/src/rmt_pulse.c
 +++ LilyGo-EPD47/src/rmt_pulse.c
-@@ -61,6 +61,13 @@ void rmt_pulse_init(gpio_num_t pin)
- #endif
+@@ -80,6 +80,12 @@ void rmt_pulse_init(gpio_num_t pin)
  }
  
-+
+ 
 +void rmt_pulse_deinit()
 +{
 +    rmt_driver_uninstall(row_rmt_config.channel);
@@ -80,16 +73,100 @@ Index: LilyGo-EPD47/src/rmt_pulse.c
  void IRAM_ATTR pulse_ckv_ticks(uint16_t high_time_ticks,
                                 uint16_t low_time_ticks, bool wait)
  {
+@@ -133,4 +139,4 @@ void IRAM_ATTR pulse_ckv_us(uint16_t hig
+ 
+ /******************************************************************************/
+ /***        END OF FILE                                                     ***/
+-/******************************************************************************/
+\ No newline at end of file
++/******************************************************************************/
 Index: LilyGo-EPD47/src/rmt_pulse.h
 ===================================================================
 --- LilyGo-EPD47.orig/src/rmt_pulse.h
 +++ LilyGo-EPD47/src/rmt_pulse.h
-@@ -16,6 +16,8 @@
+@@ -41,6 +41,8 @@ extern "C" {
   */
  void rmt_pulse_init(gpio_num_t pin);
  
 +void rmt_pulse_deinit();
 +
  /**
-  * Outputs a single pulse (high -> low) on the configured pin.
-  * This function will always wait for a previous call to finish.
+  * @brief Outputs a single pulse (high -> low) on the configured pin.
+  *
+@@ -75,4 +77,4 @@ void IRAM_ATTR pulse_ckv_ticks(uint16_t
+ #endif
+ /******************************************************************************/
+ /***        END OF FILE                                                     ***/
+-/******************************************************************************/
+\ No newline at end of file
++/******************************************************************************/
+Index: LilyGo-EPD47/src/i2s_data_bus.c
+===================================================================
+--- LilyGo-EPD47.orig/src/i2s_data_bus.c
++++ LilyGo-EPD47/src/i2s_data_bus.c
+@@ -40,8 +40,6 @@ typedef struct
+     uint8_t *buf_b;
+ } i2s_parallel_state_t;
+ 
+-static esp_lcd_panel_io_handle_t io_handle = NULL;
+-
+ /******************************************************************************/
+ /***        local function prototypes                                       ***/
+ /******************************************************************************/
+@@ -100,6 +98,9 @@ static gpio_num_t start_pulse_pin;
+ 
+ static uint8_t buffer[(960 + 32) / 4] = { 0 };
+ 
++static esp_lcd_i80_bus_handle_t i80_bus = NULL;
++static esp_lcd_panel_io_handle_t io_handle = NULL;
++
+ /******************************************************************************/
+ /***        exported functions                                              ***/
+ /******************************************************************************/
+@@ -362,7 +363,7 @@ void i2s_bus_init(i2s_bus_config *cfg)
+     // start_pulse_pin = cfg->start_pulse;
+ 
+     ESP_LOGI(TAG, "Initialize Intel 8080 bus");
+-    esp_lcd_i80_bus_handle_t i80_bus = NULL;
++
+     esp_lcd_i80_bus_config_t bus_config = {
+         .dc_gpio_num = cfg->start_pulse,
+         .wr_gpio_num = cfg->clock,
+@@ -404,6 +405,7 @@ void i2s_bus_init(i2s_bus_config *cfg)
+ 
+ void i2s_deinit()
+ {
++#if USER_I2S_REG
+     esp_intr_free(gI2S_intr_handle);
+ 
+     free(i2s_state.buf_a);
+@@ -412,6 +414,10 @@ void i2s_deinit()
+     free((void *)i2s_state.dma_desc_b);
+ 
+     periph_module_disable(PERIPH_I2S1_MODULE);
++#else
++    esp_lcd_panel_io_del(io_handle);
++    esp_lcd_del_i80_bus(i80_bus);
++#endif
+ }
+ 
+ /******************************************************************************/
+Index: LilyGo-EPD47/src/ed047tc1.c
+===================================================================
+--- LilyGo-EPD47.orig/src/ed047tc1.c
++++ LilyGo-EPD47/src/ed047tc1.c
+@@ -142,6 +142,14 @@ void epd_base_init(uint32_t epd_row_widt
+     rmt_pulse_init(CKV);
+ }
+ 
++
++void epd_base_deinit()
++{
++    rmt_pulse_deinit();
++    i2s_deinit();
++}
++
++
+ void epd_poweron()
+ {
+     config_reg.ep_scan_direction = true;
