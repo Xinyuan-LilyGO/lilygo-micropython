@@ -26,11 +26,11 @@ jobs:
         cp config_T-PicoC3 config
         sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
         make
-      - name: Build T-SIM7000G
+    - name: Build T-SIM7000G
       run: |
         cp Build config_T-SIM7000G config
         make
-      - name: Build T5-4.7 Plus
+    - name: Build T5-4.7 Plus
       run: |
         cp config_T5-4.7-Plus config
         make
