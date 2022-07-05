@@ -1,0 +1,10 @@
+Index: st7789/st7789/st7789.c
+===================================================================
+--- st7789.orig/st7789/st7789.c
++++ st7789/st7789/st7789.c
+@@ -2259,4 +2259,4 @@ const mp_obj_module_t mp_module_st7789 =
+ // use the following for older versions of MicroPython
+ // MP_REGISTER_MODULE(MP_QSTR_st7789, mp_module_st7789, MODULE_ST7789_ENABLE);
+ 
+-MP_REGISTER_MODULE(MP_QSTR_st7789, mp_module_st7789);
++// MP_REGISTER_MODULE(MP_QSTR_st7789, mp_module_st7789);

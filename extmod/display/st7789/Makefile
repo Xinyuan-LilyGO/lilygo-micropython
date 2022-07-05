@@ -15,3 +15,4 @@ include $(INCLUDE_DIR)/package.mk
 all:
 	$(eval $(st7789/info))
 	$(call Package/prereq,$(TARGET_BUILD_DIR))
+	$(call Package/patches,$(TARGET_BUILD_DIR)/$(PKG_NAME),$(shell pwd)/patches)
