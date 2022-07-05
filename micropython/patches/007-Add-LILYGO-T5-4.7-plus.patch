@@ -1,0 +1,103 @@
+Index: micropython/ports/esp32/boards/LILYGO_T5-4.7-PLUS/board.json
+===================================================================
+--- /dev/null
++++ micropython/ports/esp32/boards/LILYGO_T5-4.7-PLUS/board.json
+@@ -0,0 +1,18 @@
++{
++    "deploy": [
++        "../deploy.md"
++    ],
++    "docs": "",
++    "features": [
++        "BLE",
++        "WiFi"
++    ],
++    "images": [
++        "generic_s3.jpg"
++    ],
++    "mcu": "esp32s3",
++    "product": "T5-4.7 Plus (SPIRAM)",
++    "thumbnail": "",
++    "url": "https://www.espressif.com/en/products/modules",
++    "vendor": "LilyGo"
++}
+Index: micropython/ports/esp32/boards/LILYGO_T5-4.7-PLUS/mpconfigboard.cmake
+===================================================================
+--- /dev/null
++++ micropython/ports/esp32/boards/LILYGO_T5-4.7-PLUS/mpconfigboard.cmake
+@@ -0,0 +1,14 @@
++set(IDF_TARGET esp32s3)
++
++set(SDKCONFIG_DEFAULTS
++    boards/sdkconfig.base
++    boards/sdkconfig.usb
++    boards/LILYGO_T5-4.7-PLUS/sdkconfig.board
++)
++
++if(NOT MICROPY_FROZEN_MANIFEST)
++    set(MICROPY_FROZEN_MANIFEST ${MICROPY_PORT_DIR}/boards/manifest.py
++                                $(EXTMOD_FROZEN_DIR)/touch/manifest.py
++                                $(EXTMOD_FROZEN_DIR)/display/framebuf1/manifest.py)
++endif()
++set(EXTMOD_EPD 1)
+Index: micropython/ports/esp32/boards/LILYGO_T5-4.7-PLUS/mpconfigboard.h
+===================================================================
+--- /dev/null
++++ micropython/ports/esp32/boards/LILYGO_T5-4.7-PLUS/mpconfigboard.h
+@@ -0,0 +1,8 @@
++#define MICROPY_HW_BOARD_NAME               "T5-4.7 Plus (spiram)"
++#define MICROPY_HW_MCU_NAME                 "ESP32S3"
++
++#define MICROPY_PY_BLUETOOTH                (0)
++#define MICROPY_PY_MACHINE_DAC              (0)
++
++#define MICROPY_HW_I2C0_SCL                 (9)
++#define MICROPY_HW_I2C0_SDA                 (8)
+Index: micropython/ports/esp32/boards/LILYGO_T5-4.7-PLUS/sdkconfig.board
+===================================================================
+--- /dev/null
++++ micropython/ports/esp32/boards/LILYGO_T5-4.7-PLUS/sdkconfig.board
+@@ -0,0 +1,23 @@
++CONFIG_FLASHMODE_QIO=y
++CONFIG_ESPTOOLPY_FLASHFREQ_80M=y
++CONFIG_ESPTOOLPY_FLASHSIZE_DETECT=y
++CONFIG_ESPTOOLPY_AFTER_NORESET=y
++
++CONFIG_SPIRAM_MEMTEST=
++
++CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
++CONFIG_PARTITION_TABLE_CUSTOM=y
++CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions-16MiB.csv"
++
++CONFIG_ESP32S3_SPIRAM_SUPPORT=y
++CONFIG_SPIRAM_MODE_OCT=y
++CONFIG_SPIRAM_TYPE_AUTO=y
++CONFIG_SPIRAM_SIZE=-1
++CONFIG_SPIRAM_SPEED_80M=y
++CONFIG_SPIRAM=y
++CONFIG_SPIRAM_BOOT_INIT=y
++CONFIG_SPIRAM_IGNORE_NOTFOUND=y
++CONFIG_SPIRAM_USE_MEMMAP=y
++CONFIG_SPIRAM_MEMTEST=y
++CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL=16384
++CONFIG_SPIRAM_MALLOC_RESERVE_INTERNAL=32768
+\ No newline at end of file
+Index: micropython/ports/esp32/main/CMakeLists.txt
+===================================================================
+--- micropython.orig/ports/esp32/main/CMakeLists.txt
++++ micropython/ports/esp32/main/CMakeLists.txt
+@@ -121,6 +121,14 @@ set(IDF_COMPONENTS
+     xtensa
+ )
+ 
++
++string(COMPARE EQUAL MICROPY_BOARD "LILYGO_T5-4.7-PLUS" S_out)
++message(WARNING "S_out ${S_out}")
++
++if(IDF_TARGET STREQUAL "esp32s3" AND S_out STREQUAL "0")
++    list(APPEND IDF_COMPONENTS esp_lcd)
++endif()
++
+ if(IDF_VERSION_MINOR GREATER_EQUAL 1 OR IDF_VERSION_MAJOR GREATER_EQUAL 5)
+     list(APPEND IDF_COMPONENTS esp_netif)
+ endif()
