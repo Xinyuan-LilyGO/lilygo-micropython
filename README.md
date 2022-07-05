@@ -1,5 +1,21 @@
 # LilyGo MicroPython
 
+# Index
+
+- [1. Install Prerequisites](#install-prerequisites)
+- [2. Supported Boards](#supported-boards)
+- [3. Build](#build)
+  - [3.1 T-SIM7000G](#t-sim7000g)
+  - [3.1 T5-4.7](#t5-47)
+  - [3.2 T-CALL SIM800](#t-call-sim800)
+  - [3.3 T-PicoC3](#t-picoc3)
+  - [3.4 T5-4.7 Plus](#t5-47-plus)
+- [4. Modules](#modules)
+  - [4.1 Display Module](#display-module)
+- [5. Interesting Project](#interesting-project)
+
+---
+
 ## Install Prerequisites
 
 To compile with lilygo-micropython you need to get the following packages. The command to run depends on which distribution of Linux you are using:
@@ -7,8 +23,16 @@ To compile with lilygo-micropython you need to get the following packages. The c
 - Ubuntu and Debian:
 
 ```
-sudo apt-get install git make python3 python3-pip cmake
+sudo apt-get install git make python3 python3-pip cmake quilt
 ```
+
+## Supported Boards
+
+- LilyGo T-SIM7000G
+- LilyGo T5-4.7
+- LilyGo T-T-CALL SIM800
+- LilyGo T-PicoC3
+- LilyGo T5-4.7 Plus (esp32s3)
 
 ## Build
 
@@ -41,18 +65,20 @@ $ sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
 $ make
 ```
 
-## Supported Boards
+### T5-4.7 Plus
 
-- LilyGo T-SIM7000G
-- LilyGo T5-4.7
-- LilyGo T-T-CALL SIM800
-- LilyGo T-PicoC3
+```shell
+$ cp config_T5-4.7-Plus config
+$ make
+```
 
 ## Modules
 
 ### Display Module
 
-[LilyGo-EPD47 using in micropython](./extmod/display/epd/README.md)
+- [epd](./extmod/display/epd/README.md): [LilyGo-EPD47](https://github.com/Xinyuan-LilyGO/LilyGo-EPD47) using in micropython.
+- [framebuf1](./extmod/display/framebuf1/): This module provides a general frame buffer which can be used to epd module.
+- [st7789](./extmod/display/st7789/): Fast MicroPython driver for ST7789 display module written in C.
 
 ## Interesting Project
 
