@@ -3,20 +3,22 @@
 ## $(1) TARGET_BUILD_DIR
 ##
 define Package/prereq
-	if [ -e $(1)/$(PKG_NAME) ]; then \
+	$(LOG_LEVEL)if [ -e $(1)/$(PKG_NAME) ]; then \
 		if [ \! -e $(1)/$(PKG_NAME)/prereq ]; then \
 			rm -rf $(1)/$(PKG_NAME) ; \
 			if [ \! -e $(DL_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz ]; then \
 				$(call Download) ; \
 			fi ;\
-			tar -xvf $(DL_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz -C $(1) ; \
+			echo "unpack $(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz" ; \
+			tar -xf $(DL_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz -C $(1) ; \
 			touch $(1)/$(PKG_NAME)/prereq ; \
 		fi ; \
 	else \
 		if [ \! -e $(DL_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz ]; then \
 			$(call Download) ; \
 		fi ; \
-		tar -xvf $(DL_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz -C $(1) ; \
+		echo "unpack $(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz" ; \
+		tar -xf $(DL_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz -C $(1) ; \
 		touch $(1)/$(PKG_NAME)/prereq ; \
 	fi
 endef
@@ -34,6 +36,7 @@ endef
 ##
 ##
 define Package/patches
+	$(LOG_LEVEL)echo "Push patch on $(1)" && \
 	cd $(1) ; \
 	quilt import $(2)/* ; \
 	quilt push -a ; \

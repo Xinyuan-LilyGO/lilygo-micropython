@@ -12,6 +12,7 @@ endif
 ## $(4) OPTS
 ##
 define DownloadMethod/git
+	$(LOG_LEVEL)echo "Download $(1)-$(3).tar.gz over git" && \
 	[ -d $(TMP_DIR) ] && mkdir -p $(TMP_DIR)/dl && \
 	cd $(TMP_DIR)/dl && \
 	rm -rf $(1) && \
@@ -20,12 +21,12 @@ define DownloadMethod/git
 	(cd $(1) && git checkout $(3) && \
 	git submodule update --init --recursive) && \
 	echo "Packing checkout..." && \
-	tar czf $(DL_DIR)/$(1)-$(3).tar.gz $(1)
+	tar czf $(DL_DIR)/$(1)-$(3).tar.gz $(1) 
 endef
 # tar czf $(DL_DIR)/$(1)-$(3).tar.gz $(1)
 
 define Download
-	retry=0 ; \
+	$(LOG_LEVEL)retry=0 ; \
 	while [ $$retry -le 2 ]; \
 	do \
 		if [ ! -e $(DL_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz ]; then \
