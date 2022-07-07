@@ -1,0 +1,23 @@
+{
+    "deploy": [
+        "../deploy.md"
+    ],
+    "docs": "",
+    "features": [
+        "WiFi ESP32-C3",
+        "Bluetooth ESP32-C3",
+        "LCD ST7789",
+        "SPI Flash 4MB",
+        "Battery",
+        "USB TYPE-C"
+    ],
+    "id": "rp2-pico",
+    "images": [
+        "rp2-pico.jpg"
+    ],
+    "mcu": "rp2040",
+    "product": "Pico",
+    "thumbnail": "",
+    "url": "https://pt.aliexpress.com/item/3256803977826910.html",
+    "vendor": "Raspberry Pi"
+}

@@ -23,7 +23,7 @@ TARGET_BUILD_DIR:=$(BUILD_DIR)/$(TARGET)
 
 export TMP_DIR DL_DIR INCLUDE_DIR BUILD_DIR TARGET_BUILD_DIR TOP_DIR SHELL LOG_LEVEL
 
-include $(TOP_DIR)/target/$(TARGET).mk
+include $(TOP_DIR)/target/$(TARGET)/$(TARGET).mk
 include $(TOP_DIR)/micropython/micropython.mk
 
 # $(foreach var, $(dir), make -C $(shell dirname $(var));)

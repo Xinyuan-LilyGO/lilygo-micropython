@@ -1,0 +1,19 @@
+Index: micropython/ports/rp2/Makefile
+===================================================================
+--- micropython.orig/ports/rp2/Makefile
++++ micropython/ports/rp2/Makefile
+@@ -14,6 +14,14 @@ ifdef USER_C_MODULES
+ CMAKE_ARGS += -DUSER_C_MODULES=${USER_C_MODULES}
+ endif
+ 
++ifdef EXTMOD_FROZEN_DIR
++	CMAKE_ARGS += -D EXTMOD_FROZEN_DIR=$(EXTMOD_FROZEN_DIR)
++endif
++
++ifdef MICROPY_BOARD_DIR
++	CMAKE_ARGS += -D MICROPY_BOARD_DIR=$(MICROPY_BOARD_DIR)
++endif
++
+ all:
+ 	[ -d $(BUILD) ] || cmake -S . -B $(BUILD) -DPICO_BUILD_DOCS=0 ${CMAKE_ARGS}
+ 	$(MAKE) $(MAKESILENT) -C $(BUILD)

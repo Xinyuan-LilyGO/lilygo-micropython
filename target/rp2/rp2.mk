@@ -22,7 +22,9 @@ endef
 define rp2/compile
 	make -C $(TARGET_BUILD_DIR)/micropython/mpy-cross && \
 	cd $(TARGET_BUILD_DIR)/micropython/ports/rp2 && \
-	make BOARD=$(BOARD) BUILD=$(BUILD_DIR)/$(TARGET)/$(BOARD) \
+	make MICROPY_BOARD_DIR=$(TOP_DIR)/target/$(TARGET)/boards/$(BOARD) \
+			BOARD=$(BOARD) \
+			BUILD=$(TARGET_BUILD_DIR)/$(BOARD) \
 			USER_C_MODULES=$(TOP_DIR)/extmod/micropython.cmake \
 			EXTMOD_FROZEN_DIR=$(TOP_DIR)/extmod && \
 	cd -

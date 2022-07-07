@@ -1,0 +1,2 @@
+#define MICROPY_HW_BOARD_NAME "T-SIM7000G (spiram)"
+#define MICROPY_HW_MCU_NAME "ESP32"

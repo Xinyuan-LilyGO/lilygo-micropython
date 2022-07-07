@@ -13,5 +13,5 @@ endef
 define micropython/prereq
 	$(eval $(micropython/info))
 	$(call Package/prereq,$(TARGET_BUILD_DIR))
-	$(call Package/patches,$(TARGET_BUILD_DIR)/$(PKG_NAME),$(TOP_DIR)/$(PKG_NAME)/patches)
+	$(call Package/patches,$(TARGET_BUILD_DIR)/$(PKG_NAME),$(TOP_DIR)/$(PKG_NAME)/patches-$(PKG_SOURCE_VERSION))
 endef
