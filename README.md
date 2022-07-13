@@ -10,9 +10,11 @@
   - [3.2 T-CALL SIM800](#t-call-sim800)
   - [3.3 T-PicoC3](#t-picoc3)
   - [3.4 T5-4.7 Plus](#t5-47-plus)
+  - [3.5 T-Echo](#t-echo)
 - [4. Modules](#modules)
   - [4.1 Display Module](#display-module)
 - [5. Interesting Project](#interesting-project)
+- [6. Future plans](#future-plans)
 
 ---
 
@@ -33,6 +35,7 @@ sudo apt-get install git make python3 python3-pip cmake quilt
 - LilyGo T-T-CALL SIM800
 - LilyGo T-PicoC3
 - LilyGo T5-4.7 Plus (esp32s3)
+- LilyGo T-Echo
 
 ## Build
 
@@ -72,6 +75,27 @@ $ cp config_T5-4.7-Plus config
 $ make
 ```
 
+### T-Echo
+
+```shell
+$ cp config_T-Echo config
+$ make
+```
+
+> Use circuitpython by default
+
+To use micropython, you need to modify the config file:
+
+```diff
+--- config_T-Echo       2022-07-13 17:11:04.374660308 +0800
++++ config      2022-07-13 17:11:00.694565940 +0800
+@@ -1,3 +1,3 @@
+ CONFIG_TARGET=nrf
+ CONFIG_BOARD=LILYGO_T-Echo
+-CONFIG_MICROPYTHON_CORE=circuitpython
++# CONFIG_MICROPYTHON_CORE=circuitpython
+```
+
 ## Modules
 
 ### Display Module
@@ -83,3 +107,9 @@ $ make
 ## Interesting Project
 
 [LilyGo-EPD-4-7-OWM-Weather-Display](https://github.com/Xinyuan-LilyGO/LilyGo-EPD-4-7-OWM-Weather-Display/tree/web/micropython): Using the LilyGo EPD 4.7" display to show OWM Weather Data
+
+## Future plans
+
+- Support menuconfig
+- More boards
+- Complete development documentation
