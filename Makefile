@@ -18,19 +18,20 @@ include config
 
 TARGET:=$(if $(CONFIG_TARGET),$(CONFIG_TARGET),esp32)
 BOARD:=$(if $(CONFIG_BOARD),$(CONFIG_BOARD),GENERIC_SPIRAM)
+MICROPYTHON_CORE:=$(if $(CONFIG_MICROPYTHON_CORE),$(CONFIG_MICROPYTHON_CORE),micropython)
 
 TARGET_BUILD_DIR:=$(BUILD_DIR)/$(TARGET)
 
 export TMP_DIR DL_DIR INCLUDE_DIR BUILD_DIR TARGET_BUILD_DIR TOP_DIR SHELL LOG_LEVEL
 
 include $(TOP_DIR)/target/$(TARGET)/$(TARGET).mk
-include $(TOP_DIR)/micropython/micropython.mk
+include $(TOP_DIR)/$(MICROPYTHON_CORE)/$(MICROPYTHON_CORE).mk
 
 # $(foreach var, $(dir), make -C $(shell dirname $(var));)
 # make -C $(TOP_DIR)/target/$(TARGET)
 # $(call micropython/prereq)
 
-all: prereq micropython extmod
+all: prereq $(MICROPYTHON_CORE) extmod
 	$(call $(TARGET)/prereq)
 	$(call $(TARGET)/compile)
 	$(call $(TARGET)/install)
@@ -40,6 +41,12 @@ micropython:
 	$(LOG_LEVEL)echo "Prepare micropython source code..."
 	$(call micropython/prereq)
 	$(LOG_LEVEL)echo "Prepare micropython source code...ok"
+
+.PHONY: circuitpython
+circuitpython:
+	$(LOG_LEVEL)echo "Prepare circuitpython source code..."
+	$(call circuitpython/prereq)
+	$(LOG_LEVEL)echo "Prepare circuitpython source code...ok"
 
 .PHONY: extmod
 extmod:
@@ -68,7 +75,5 @@ prereq:
 .PHONY: clean
 clean:
 	$(LOG_LEVEL)echo "Clear working directory..."
-	$(LOG_LEVEL)rm -rf $(TMP_DIR)
-	$(LOG_LEVEL)rm -rf $(BIN_DIR)
-	$(LOG_LEVEL)rm -rf $(BUILD_DIR)
+	$(LOG_LEVEL)rm -rf $(TARGET_BUILD_DIR)/$(BOARD)
 	$(LOG_LEVEL)echo "Clear working directory...ok"
