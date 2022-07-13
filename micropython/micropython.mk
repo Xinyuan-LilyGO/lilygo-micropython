@@ -8,6 +8,7 @@ define micropython/info
   PKG_SOURCE_PROTO:=git
   PKG_SOURCE_VERSION:=v1.18
   PKG_SOURCE_MD5:=639c7fcbe62a8252cf9367147d94c150
+  PKG_SOURCE_OPT:=--recurse-submodules
 endef
 
 define micropython/prereq

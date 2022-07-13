@@ -18,19 +18,20 @@ define DownloadMethod/git
 	rm -rf $(1) && \
 	[ \! -d $(1) ] && \
 	git clone $(4) $(2) $(1) && \
-	(cd $(1) && git checkout $(3) && \
-	git submodule update --init --recursive) && \
+	(cd $(1) && git checkout $(3) && git submodule update) && \
 	echo "Packing checkout..." && \
-	tar czf $(DL_DIR)/$(1)-$(3).tar.gz $(1) 
+	tar czf $(DL_DIR)/$(1)-$(3).tar.gz $(1)
 endef
-# tar czf $(DL_DIR)/$(1)-$(3).tar.gz $(1)
+
 
 define Download
 	retry=0 ; \
 	while [ $$retry -le 2 ]; \
 	do \
 		if [ ! -e $(DL_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz ]; then \
-			$(call DownloadMethod/git,$(PKG_NAME),$(PKG_SOURCE_URL),$(PKG_SOURCE_VERSION)) ; \
+			if [ $(PKG_SOURCE_PROTO) = "git" ]; then \
+				$(call DownloadMethod/git,$(PKG_NAME),$(PKG_SOURCE_URL),$(PKG_SOURCE_VERSION),$(PKG_SOURCE_OPT)) ; \
+			fi ; \
 		fi ; \
 		retry=`expr $$retry + 1` ; \
 	done

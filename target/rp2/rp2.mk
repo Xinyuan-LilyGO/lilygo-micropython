@@ -3,11 +3,11 @@ include $(INCLUDE_DIR)/download.mk
 include $(INCLUDE_DIR)/package.mk
 
 define rp2/info
-  PKG_NAME:=
-  PKG_SOURCE_URL:=
-  PKG_SOURCE_PROTO:=
-  PKG_SOURCE_VERSION:=
-  PKG_SOURCE_MD5:=
+	PKG_NAME:=
+	PKG_SOURCE_URL:=
+	PKG_SOURCE_PROTO:=
+	PKG_SOURCE_VERSION:=
+	PKG_SOURCE_MD5:=
 endef
 
 # $(call DownloadMethod/git,$(PKG_NAME),$(PKG_SOURCE_URL),$(PKG_SOURCE_VERSION)) ;
