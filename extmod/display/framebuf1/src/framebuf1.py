@@ -19,19 +19,20 @@ class FrameBuffer():
     bitmap images, which can then be sent to a display.
     '''
 
-    def __init__(self, buffer, width, height):
+    def __init__(self, buffer: bytearray, width: int, height: int):
         self.fb = buffer
         self.width = width
         self.height = height
 
-    def fill(self, color):
+    def fill(self, color: int):
         '''Fill the entire FrameBuffer with the specified color.
         '''
+        color = 255 - color
+        color = color >> 4 | color
         for i in range(0, self.width * int(self.height / 2)):
             self.fb[i] = color
 
-
-    def pixel(self, x, y, color):
+    def pixel(self, x: int, y: int, color: int):
         '''Draw a pixel a given framebuffer.
 
         Args:
@@ -39,20 +40,18 @@ class FrameBuffer():
             y: Vertical position in pixels.
             color: The gray value of the line (0-255).
         '''
-        x = int(x)
-        y = int(y)
         if x < 0 or x >= self.width:
             return
         if y < 0 or y >= self.height:
             return
+        color = 255 - color
         pos = y * int(self.width / 2) + int(x / 2)
         if int(x % 2):
-            self.fb[pos] = self.fb[pos] & 0x0F | color & 0xF0
+            self.fb[pos] = (self.fb[pos] & 0x0F) | (color & 0xF0)
         else:
-            self.fb[pos] = self.fb[pos] & 0xF0 | color >> 4
+            self.fb[pos] = (self.fb[pos] & 0xF0) | (color >> 4 & 0x0F)
 
-
-    def hline(self, x, y, length, color):
+    def hline(self, x: int, y: int, length: int, color: int):
         '''Draw a horizontal line to a given framebuffer.
 
         Args:
@@ -61,14 +60,10 @@ class FrameBuffer():
             length: Length of the line in pixels.
             color: The gray value of the line (0-255);
         '''
-        x = int(x)
-        y = int(y)
-        length = int(length)
         for i in range(0, length):
             self.pixel(x + i, y, color)
 
-
-    def vline(self, x, y, length, color):
+    def vline(self, x: int, y: int, length: int, color: int):
         '''Draw a horizontal line to a given framebuffer.
 
         Args:
@@ -77,14 +72,10 @@ class FrameBuffer():
             length: Length of the line in pixels.
             color: The gray value of the line (0-255);
         '''
-        x = int(x)
-        y = int(y)
-        length = int(length)
         for i in range(0, length):
             self.pixel(x, y + i, color)
 
-
-    def line(self, x0, y0, x1, y1, color):
+    def line(self, x0: int, y0: int, x1: int, y1: int, color: int):
         '''Draw a line
 
         Args:
@@ -94,10 +85,6 @@ class FrameBuffer():
             y1  End point y coordinate
             color: The gray value of the line (0-255)
         '''
-        x0 = int(x0)
-        y0 = int(y0)
-        x1 = int(x1)
-        y1 = int(y1)
         if x0 == x1:
             if (y0 > y1):
                 y0, y1 = self._swap_int(y0, y1)
@@ -109,8 +96,7 @@ class FrameBuffer():
         else:
             self._write_line(x0, y0, x1, y1, color)
 
-
-    def rect(self, x, y, w, h, color):
+    def rect(self, x: int, y: int, w: int, h: int, color: int):
         '''Draw a rectanle with no fill color
 
         Args:
@@ -125,7 +111,7 @@ class FrameBuffer():
         self.vline(x, y, h, color)
         self.vline(x + w - 1, y, h, color)
 
-    def fill_rect(self, x, y, w, h, color):
+    def fill_rect(self, x: int, y: int, w: int, h: int, color: int):
         '''Draw a rectanle with fill color
 
         Args:
@@ -135,14 +121,10 @@ class FrameBuffer():
             h: Height in pixels
             color: The gray value of the line (0-255)
         '''
-        x = int(x)
-        y = int(y)
-        w = int(w)
-        h = int(h)
         for i in range(x, x + w):
             self.vline(i, y, h, color)
 
-    def circle(self, x, y, r, color):
+    def circle(self, x: int, y: int, r: int, color: int):
         '''Draw a circle with given center and radius
 
         Args:
@@ -151,9 +133,6 @@ class FrameBuffer():
             r: Radius of the circle in pixels
             color: The gray value of the line (0-255)
         '''
-        x = int(x)
-        y = int(y)
-        r = int(r)
         f = 1 - r
         ddF_x = 1
         ddF_y = -2 * r
@@ -183,7 +162,7 @@ class FrameBuffer():
             self.pixel(x + yy, y - xx, color)
             self.pixel(x - yy, y - xx, color)
 
-    def fill_circle(self, x, y, r, color):
+    def fill_circle(self, x: int, y: int, r: int, color: int):
         '''Draw a circle with fill with given center and radius
 
         Args:
@@ -192,13 +171,10 @@ class FrameBuffer():
             r: Radius of the circle in pixels
             color: The gray value of the line (0-255)
         '''
-        x = int(x)
-        y = int(y)
-        r = int(r)
         self.vline(x, y - r, 2 * r + 1, color)
         self._fill_circle_helper(x, y, r, 3, 0, color)
 
-    def triangle(self, x0, y0, x1, y1, x2, y2, color):
+    def triangle(self, x0: int, y0: int, x1: int, y1: int, x2: int, y2: int, color: int):
         '''Draw a triangle with no fill color
 
         Args:
@@ -214,7 +190,7 @@ class FrameBuffer():
         self.line(x1, y1, x2, y2, color)
         self.line(x2, y2, x0, y0, color)
 
-    def fill_triangle(self, x0, y0, x1, y1, x2,  y2, color):
+    def fill_triangle(self, x0: int, y0: int, x1: int, y1: int, x2: int,  y2: int, color: int):
         '''Draw a triangle with color-fill
 
         Args:
@@ -286,11 +262,9 @@ class FrameBuffer():
                 a, b = self._swap_int(a, b)
             self.hline(a, i, b - a + 1, color)
 
-    def text(self, gfx, s, x, y):
+    def text(self, gfx, s: str, x: int, y: int):
         '''Write a (multi-line) string to FrameBuffer.
         '''
-        x = int(x)
-        y = int(y)
         line_start = x
         a = s.splitlines()
         for i in a:
@@ -299,7 +273,7 @@ class FrameBuffer():
             x = line_start
         return x, y
 
-    def writeln(self, gfx, s, x, y):
+    def writeln(self, gfx, s: str, x: int, y: int):
         if s is None or len(s) == 0:
             return
 
@@ -323,7 +297,7 @@ class FrameBuffer():
         y += local_cursor_y - cursor_y_init
         return x, y
 
-    def get_text_bounds(self, gfx, s, x, y, x1, y1, w, h):
+    def get_text_bounds(self, gfx: GFXfont, s: str, x: int, y: int, x1: int, y1: int, w: int, h: int):
         if len(s) == 0:
             return x, y, x, y, 0, 0
 
@@ -342,7 +316,7 @@ class FrameBuffer():
         h = maxy - miny
         return x, y, x1, y1, w, h
 
-    def get_char_bounds(self, gfx, codepoint, x, y, minx, miny, maxx, maxy):
+    def get_char_bounds(self, gfx: GFXfont, codepoint: int, x: int, y: int, minx: int, miny: int, maxx: int, maxy: int):
         glyph = self.get_glyph(gfx, codepoint)
 
         if glyph is None:
@@ -365,14 +339,14 @@ class FrameBuffer():
         x += glyph.advance_x
         return x, y, minx, miny, maxx, maxy
 
-    def get_glyph(self, gfx, code_point):
+    def get_glyph(self, gfx: GFXfont, code_point: int):
         glyph = None
         for interval in gfx.intervals:
             if code_point >= interval.first and code_point <= interval.last:
                 glyph = gfx.glyph[interval.offset + (code_point - interval.first)]
         return glyph
 
-    def draw_char(self, gfx, cursor_x, cursor_y, cp):
+    def draw_char(self, gfx: GFXfont, cursor_x: int, cursor_y: int, cp: int):
         glyph = self.get_glyph(gfx, cp)
 
         if glyph is None:
@@ -424,8 +398,7 @@ class FrameBuffer():
         cursor_x += glyph.advance_x
         return cursor_x
 
-
-    def _fill_circle_helper(self, x0, y0, r, corners, delta, color):
+    def _fill_circle_helper(self, x0: int, y0: int, r: int, corners: int, delta: int, color: int):
         f = 1 - r
         ddF_x = 1
         ddF_y = -2 * r
@@ -457,8 +430,7 @@ class FrameBuffer():
                 py = y
             px = x
 
-
-    def _write_line(self, x0, y0, x1, y1, color):
+    def _write_line(self, x0: int, y0: int, x1: int, y1: int, color: int):
         '''Write a line. Bresenham's algorithm - thx wikpedia
 
         Args:
@@ -493,44 +465,6 @@ class FrameBuffer():
                 y0 += ystep
                 err += dx
 
-
     @staticmethod
-    def _swap_int(a, b):
+    def _swap_int(a: int, b: int):
         return b, a
-
-
-if __name__ == "__main__":
-    from FiraSansRegular10pt import FiraSansRegular10pt
-
-    buffer = [ 0 for _ in range(0, int(960 * 540 / 2)) ]
-    fb = FrameBuffer(buffer, 960, 540)
-    fb.fill(255)
-
-    fb.hline(100, 100, 100, 256)
-
-    fb.vline(100, 100, 100, 256)
-
-    fb.circle(200, 200, 50, 256)
-    fb.fill_circle(400, 200, 50, 256)
-
-    fb.rect(600, 200, 100, 100, 256)
-    fb.fill_rect(800, 200, 100, 100, 256)
-
-    fb.line(100, 300, 400, 500, 256)
-    fb.line(400, 500, 100, 300, 256)
-    fb.line(400, 300, 100, 500, 256)
-    fb.line(100, 500, 400, 300, 256)
-
-    fb.triangle(200, 400, 150, 500, 250, 400, 256)
-    fb.fill_triangle(600, 400, 600, 500, 700, 500, 256)
-
-    fb.text(FiraSansRegular10pt, "1234", 50, 50)
-    try:
-        from epd import EPD47
-        e = EPD47()
-        e.power(True)
-        e.clear()
-        e.bitmap(buffer, 0, 0, 960, 540)
-    except:
-        print("The current parser is not micropython")
-
