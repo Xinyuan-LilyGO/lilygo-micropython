@@ -1,4 +1,5 @@
 #include "py/obj.h"
+#include "py/objarray.h"
 #include "py/runtime.h"
 #include "py/mphal.h"
 #include "py/mpthread.h"
@@ -77,37 +78,19 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_2(epd47_power_obj, epd47_power);
 
 STATIC mp_obj_t epd47_bitmap(size_t n_args, const mp_obj_t *args)
 {
-    // epd47_if_obj_t *self = NULL;
     Rect_t area;
-    size_t len;
-    mp_obj_t *items;
-    uint8_t *data = NULL;
+    mp_buffer_info_t bufinfo;
 
     if (n_args < 2 || n_args > 6) return mp_const_none;
 
-    // self = MP_OBJ_TO_PTR(args[0]);
+    mp_get_buffer_raise(args[1], &bufinfo, MP_BUFFER_WRITE);
     area.x      = mp_obj_get_int(args[2]);
     area.y      = mp_obj_get_int(args[3]);
     area.width  = mp_obj_get_int(args[4]);
     area.height = mp_obj_get_int(args[5]);
 
-    data = m_malloc((area.width * area.height) / 2);
-    if (!data)
-    {
-        mp_printf(&mp_plat_print, "malloc fail\n");
-        mp_raise_TypeError(MP_ERROR_TEXT("malloc fail"));
-        return mp_const_none;
-    }
+    epd_draw_image(area, (uint8_t *)bufinfo.buf, BLACK_ON_WHITE);
 
-    mp_obj_list_get(args[1], &len, &items);
-    for (size_t i = 0; i < len; i++)
-    {
-        data[i] = mp_obj_get_int(items[i]);
-    }
-
-    epd_clear_area(area);
-    epd_draw_grayscale_image(area, (uint8_t *)data);
-    m_free(data);
     return mp_const_none;
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(epd47_bitmap_obj, 6, 6, epd47_bitmap);
