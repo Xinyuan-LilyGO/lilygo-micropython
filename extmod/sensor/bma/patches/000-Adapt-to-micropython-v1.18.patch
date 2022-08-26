@@ -1,0 +1,13 @@
+diff --git a/src/modbma.c b/src/modbma.c
+index e213980..4aec157 100644
+--- a/src/modbma.c
++++ b/src/modbma.c
+@@ -45,6 +45,6 @@ const mp_obj_module_t mp_module_bma = {
+     .globals = (mp_obj_dict_t *)&bma_module_globals,
+ };
+ 
+-MP_REGISTER_MODULE(MP_QSTR_bma, mp_module_bma);
++MP_REGISTER_MODULE(MP_QSTR_bma, mp_module_bma, 1);
+ 
+ // #endif
+\ No newline at end of file
