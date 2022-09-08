@@ -1,0 +1,43 @@
+Index: micropython/ports/nrf/Makefile
+===================================================================
+--- micropython.orig/ports/nrf/Makefile
++++ micropython/ports/nrf/Makefile
+@@ -362,13 +362,16 @@ $(filter $(PY_BUILD)/../extmod/vfs_fat_%
+ .PHONY: all flash deploy sd binary hex
+ 
+ ifeq ($(MCU_VARIANT), nrf91)
+-all: binary hex secureboot
++all: $(NEED_DOWN_BLE_STACK) binary hex secureboot
+ else
+-all: binary hex
++all: $(NEED_DOWN_BLE_STACK) binary hex
+ endif
+ 
+ OUTPUT_FILENAME = firmware
+ 
++download_ble_stack:
++	drivers/bluetooth/download_ble_stack.sh
++
+ ## Create binary .bin file from the .out file
+ binary: $(BUILD)/$(OUTPUT_FILENAME).bin
+ 
+Index: micropython/ports/nrf/drivers/bluetooth/bluetooth_common.mk
+===================================================================
+--- micropython.orig/ports/nrf/drivers/bluetooth/bluetooth_common.mk
++++ micropython/ports/nrf/drivers/bluetooth/bluetooth_common.mk
+@@ -1,6 +1,7 @@
+ 
+ SOFTDEV_HEX_NAME ?=
+ SOFTDEV_HEX_PATH ?=
++NEED_DOWN_BLE_STACK ?=
+ 
+ ifeq ($(SD), s110)
+ 	INC += -Idrivers/bluetooth/$(SD)_$(MCU_VARIANT)_$(SOFTDEV_VERSION)/$(SD)_$(MCU_VARIANT)_$(SOFTDEV_VERSION)_API/include
+@@ -45,5 +46,6 @@ endef
+ SOFTDEV_HEX = $(SOFTDEV_HEX_PATH)/$(SOFTDEV_HEX_NAME)
+ 
+ ifeq ($(shell test ! -e $(SOFTDEV_HEX) && echo -n no),no)
+-    $(error $(STACK_MISSING_ERROR))
++    $(warning $(STACK_MISSING_ERROR))
++    NEED_DOWN_BLE_STACK = download_ble_stack
+ endif

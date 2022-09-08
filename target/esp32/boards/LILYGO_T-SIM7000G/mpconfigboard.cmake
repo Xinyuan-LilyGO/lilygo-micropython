@@ -1,6 +1,8 @@
-set(SDKCONFIG_DEFAULTS boards/sdkconfig.base
-                       boards/sdkconfig.ble
-                       boards/sdkconfig.spiram
+set(SDKCONFIG_DEFAULTS ${MICROPY_PORT_DIR}/boards/sdkconfig.240mhz
+                       ${MICROPY_PORT_DIR}/boards/sdkconfig.base
+                       ${MICROPY_PORT_DIR}/boards/sdkconfig.ble
+                       ${MICROPY_PORT_DIR}/boards/sdkconfig.spiram
+                       ${CMAKE_CURRENT_LIST_DIR}/sdkconfig.board
 )
 
 if(NOT MICROPY_FROZEN_MANIFEST)

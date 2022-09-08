@@ -1,0 +1,23 @@
+name: T-PicoC3 CI
+
+on:
+  push:
+    paths:
+      - 'target/rp2/boards/LILYGO_T_PicoC3/**'
+      - 'target/rp2/rp2.mk'
+  pull_request:
+    paths:
+      - 'target/rp2/boards/LILYGO_T_PicoC3/**'
+      - 'target/rp2/rp2.mk'
+
+jobs:
+  build_t-picoc3:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T-Call
+      run: |
+        cp config_T-PicoC3 config
+        make

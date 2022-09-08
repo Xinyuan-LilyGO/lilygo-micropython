@@ -1,0 +1,17 @@
+Index: micropython/ports/esp32/Makefile
+===================================================================
+--- micropython.orig/ports/esp32/Makefile
++++ micropython/ports/esp32/Makefile
+@@ -31,7 +31,11 @@ endif
+ IDFPY_FLAGS += -D MICROPY_BOARD=$(BOARD) -B $(BUILD) $(CMAKE_ARGS)
+ 
+ ifdef FROZEN_MANIFEST
+-       IDFPY_FLAGS += -D MICROPY_FROZEN_MANIFEST=$(FROZEN_MANIFEST)
++	IDFPY_FLAGS += -D MICROPY_FROZEN_MANIFEST=$(FROZEN_MANIFEST)
++endif
++
++ifdef EXTMOD_FROZEN_DIR
++	IDFPY_FLAGS += -D EXTMOD_FROZEN_DIR=$(EXTMOD_FROZEN_DIR)
+ endif
+ 
+ all:

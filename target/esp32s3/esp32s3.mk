@@ -25,15 +25,15 @@ define esp32s3/compile
 	. $(TARGET_BUILD_DIR)/esp-idf/export.sh && \
 	make -C $(TARGET_BUILD_DIR)/micropython/ports/esp32 \
 			MICROPY_BOARD_DIR=$(TOP_DIR)/target/$(TARGET)/boards/$(BOARD) \
-			BOARD=$(BOARD) BUILD=$(TARGET_BUILD_DIR)/$(BOARD) \
+			BOARD=$(BOARD) BUILD=$(TARGET_BUILD_DIR)/build-$(BOARD) \
 			USER_C_MODULES=$(TOP_DIR)/extmod/micropython.cmake \
 			EXTMOD_FROZEN_DIR=$(TOP_DIR)/extmod
 endef
 
 
 define esp32s3/install
-	[ -d $(BIN_DIR) ] && mkdir -p $(BIN_DIR)/esp32s3/$(BOARD)
-	img_name=LilyGo-MicroPython_$(TARGET)_$(BOARD) && \
+	@[ -d $(BIN_DIR) ] && mkdir -p $(BIN_DIR)/esp32s3/$(BOARD)
+	@img_name=LilyGo-MicroPython_$(TARGET)_$(BOARD) && \
 	cd $(TARGET_BUILD_DIR)/micropython && \
 	micropython_version=`git show -s --pretty=format:%h` && \
 	img_name=$${img_name}_MPY-$${micropython_version} && \
@@ -42,8 +42,8 @@ define esp32s3/install
 	img_name=$${img_name}_IDF-$${idf_version} && \
 	time=`date +"%Y%m%d"` && \
 	img_name=$${img_name}_B$${time} && \
-	md5=`md5sum $(TARGET_BUILD_DIR)/$(BOARD)/firmware.bin | awk '{print $$1}'` && \
+	md5=`md5sum $(TARGET_BUILD_DIR)/build-$(BOARD)/firmware.bin | awk '{print $$1}'` && \
 	img_name=$${img_name}_$${md5:0:10} && \
-	cp $(TARGET_BUILD_DIR)/$(BOARD)/firmware.bin $(BIN_DIR)/esp32s3/$(BOARD)/$${img_name}.bin
+	cp $(TARGET_BUILD_DIR)/build-$(BOARD)/firmware.bin $(BIN_DIR)/esp32s3/$(BOARD)/$${img_name}.bin
 endef
 

@@ -1,0 +1,19 @@
+Index: micropython/ports/rp2/Makefile
+===================================================================
+--- micropython.orig/ports/rp2/Makefile
++++ micropython/ports/rp2/Makefile
+@@ -22,6 +22,14 @@ ifeq ($(DEBUG),1)
+ CMAKE_ARGS += -DCMAKE_BUILD_TYPE=Debug
+ endif
+ 
++ifdef EXTMOD_FROZEN_DIR
++	CMAKE_ARGS += -D EXTMOD_FROZEN_DIR=$(EXTMOD_FROZEN_DIR)
++endif
++
++ifdef MICROPY_BOARD_DIR
++	CMAKE_ARGS += -D MICROPY_BOARD_DIR=$(MICROPY_BOARD_DIR)
++endif
++
+ all:
+ 	[ -e $(BUILD)/Makefile ] || cmake -S . -B $(BUILD) -DPICO_BUILD_DOCS=0 ${CMAKE_ARGS}
+ 	$(MAKE) $(MAKESILENT) -C $(BUILD)

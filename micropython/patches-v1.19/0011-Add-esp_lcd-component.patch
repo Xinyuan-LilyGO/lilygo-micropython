@@ -1,0 +1,18 @@
+Index: micropython/ports/esp32/main/CMakeLists.txt
+===================================================================
+--- micropython.orig/ports/esp32/main/CMakeLists.txt
++++ micropython/ports/esp32/main/CMakeLists.txt
+@@ -126,6 +126,13 @@ set(IDF_COMPONENTS
+     xtensa
+ )
+ 
++string(COMPARE EQUAL MICROPY_BOARD "LILYGO_T5-4.7-PLUS" S_out)
++
++if(IDF_TARGET STREQUAL "esp32s3" AND S_out STREQUAL "0")
++    list(APPEND IDF_COMPONENTS esp_lcd)
++endif()
++
++
+ if(IDF_VERSION_MINOR GREATER_EQUAL 1 OR IDF_VERSION_MAJOR GREATER_EQUAL 5)
+     list(APPEND IDF_COMPONENTS esp_netif)
+ endif()

@@ -1,0 +1,23 @@
+name: T-SIM7000G CI
+
+on:
+  push:
+    paths:
+      - 'target/esp32/boards/LILYGO_T-SIM7000G/**'
+      - 'target/esp32/esp32.mk'
+  pull_request:
+    paths:
+      - 'target/esp32/boards/LILYGO_T-SIM7000G/**'
+      - 'target/esp32/esp32.mk'
+
+jobs:
+  build_t-sim7000g:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T-Call
+      run: |
+        cp config_T-SIM7000G config
+        make

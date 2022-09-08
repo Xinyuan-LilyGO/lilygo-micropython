@@ -1,0 +1,23 @@
+name: T-Echo CI
+
+on:
+  push:
+    paths:
+      - 'target/nrf/boards/LILYGO_T-Echo-circuitpythonL/**'
+      - 'target/nrf/nrf.mk'
+  pull_request:
+    paths:
+      - 'target/nrf/boards/LILYGO_T-Echo-circuitpython/**'
+      - 'target/nrf/nrf.mk'
+
+jobs:
+  build_t-echo:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T-Call
+      run: |
+        cp config_T-Echo config
+        make

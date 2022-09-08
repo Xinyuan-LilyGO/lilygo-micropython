@@ -24,7 +24,7 @@ define rp2/compile
 	cd $(TARGET_BUILD_DIR)/micropython/ports/rp2 && \
 	make MICROPY_BOARD_DIR=$(TOP_DIR)/target/$(TARGET)/boards/$(BOARD) \
 			BOARD=$(BOARD) \
-			BUILD=$(TARGET_BUILD_DIR)/$(BOARD) \
+			BUILD=$(TARGET_BUILD_DIR)/build-$(BOARD) \
 			USER_C_MODULES=$(TOP_DIR)/extmod/micropython.cmake \
 			EXTMOD_FROZEN_DIR=$(TOP_DIR)/extmod && \
 	cd -
@@ -39,7 +39,7 @@ define rp2/install
 	img_name=$${img_name}_MPY-$${micropython_version} && \
 	time=`date +"%Y%m%d"` && \
 	img_name=$${img_name}_B$${time} && \
-	md5=`md5sum $(TARGET_BUILD_DIR)/$(BOARD)/firmware.bin | awk '{print $$1}'` && \
+	md5=`md5sum $(TARGET_BUILD_DIR)/build-$(BOARD)/firmware.bin | awk '{print $$1}'` && \
 	img_name=$${img_name}_$${md5:0:10} && \
-	cp $(TARGET_BUILD_DIR)/$(BOARD)/firmware.uf2 $(BIN_DIR)/rp2/$(BOARD)/$${img_name}.uf2
+	cp $(TARGET_BUILD_DIR)/build-$(BOARD)/firmware.uf2 $(BIN_DIR)/rp2/$(BOARD)/$${img_name}.uf2
 endef

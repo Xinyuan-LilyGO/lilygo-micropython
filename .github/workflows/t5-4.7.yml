@@ -1,0 +1,23 @@
+name: T5-4.7 CI
+
+on:
+  push:
+    paths:
+      - 'target/esp32/boards/LILYGO_T5-4.7/**'
+      - 'target/esp32/esp32.mk'
+  pull_request:
+    paths:
+      - 'target/esp32/boards/LILYGO_T5-4.7/**'
+      - 'target/esp32/esp32.mk'
+
+jobs:
+  build_t5-47:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T-Call
+      run: |
+        cp config_T5-4.7 config
+        make

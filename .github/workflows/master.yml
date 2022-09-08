@@ -1,14 +1,17 @@
-name: LILYGO MicroPython
+name: MicroPython CI
 
 on:
   push:
-    paths-ignore:
-      - '**.md'
-      - '**.MD'
+    paths:
+      - 'include/**'
+      - 'micropython/**'
+      - 'extmod/**'
+      - 'libs/**'
   pull_request:
-    paths-ignore:
-      - '**.md'
-      - '**.MD'
+    paths:
+      - 'include'
+      - 'micropython'
+      - 'libs/**'
 
 jobs:
   build_t-call:
@@ -59,7 +62,7 @@ jobs:
         cp config_T-SIM7000G config
         make
 
-  build_t-t5-47:
+  build_t5-47:
     needs: build_t-call
     runs-on: ubuntu-20.04
     steps:
@@ -75,7 +78,7 @@ jobs:
         cp config_T5-4.7 config
         make
 
-  build_t-t5-47-plus:
+  build_t5-47-plus:
     needs: build_t-call
     runs-on: ubuntu-20.04
     steps:
@@ -89,17 +92,4 @@ jobs:
     - name: Build T5-4.7 Plus
       run: |
         cp config_T5-4.7-Plus config
-        make
-
-  build_t-echo:
-    runs-on: ubuntu-20.04
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install packages
-      run: sudo apt-get install git make python3 python3-pip cmake quilt
-    - name: Install dependence
-      run: sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
-    - name: Build T5-Echo
-      run: |
-        cp config_T-Echo config
         make

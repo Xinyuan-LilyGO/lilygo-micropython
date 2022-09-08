@@ -1,0 +1,15 @@
+Index: micropython/ports/esp32/Makefile
+===================================================================
+--- micropython.orig/ports/esp32/Makefile
++++ micropython/ports/esp32/Makefile
+@@ -38,6 +38,10 @@ ifdef EXTMOD_FROZEN_DIR
+ 	IDFPY_FLAGS += -D EXTMOD_FROZEN_DIR=$(EXTMOD_FROZEN_DIR)
+ endif
+ 
++ifdef MICROPY_BOARD_DIR
++	IDFPY_FLAGS += -D MICROPY_BOARD_DIR=$(MICROPY_BOARD_DIR)
++endif
++
+ all:
+ 	idf.py $(IDFPY_FLAGS) build
+ 	@$(PYTHON) makeimg.py \
