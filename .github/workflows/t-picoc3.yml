@@ -12,12 +12,23 @@ on:
 
 jobs:
   build_t-picoc3:
+    needs: build_t-call
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
     - name: Install packages
       run: sudo apt-get install git make python3 python3-pip cmake quilt
-    - name: Build T-Call
+    - uses: actions/download-artifact@v2
+      with:
+        name: dl
+        path: dl/
+    - name: Build T-PicoC3
       run: |
         cp config_T-PicoC3 config
+        sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
         make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: LILYGO_T_PicoC3_firmware
+        path: ./bin/rp2/LILYGO_T_PicoC3/

@@ -21,3 +21,8 @@ jobs:
       run: |
         cp config_T5-4.7-Plus config
         make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: LILYGO_T5-4.7-PLUS_firmware
+        path: ./bin/esp32s3/LILYGO_T5-4.7-PLUS/

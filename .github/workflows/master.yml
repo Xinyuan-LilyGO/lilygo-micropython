@@ -28,6 +28,11 @@ jobs:
       with:
         name: dl
         path: dl/
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: LILYGO_T-CALL_firmware
+        path: ./bin/esp32/LILYGO_T-CALL/
 
   build_t-picoc3:
     needs: build_t-call
@@ -45,6 +50,11 @@ jobs:
         cp config_T-PicoC3 config
         sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
         make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: LILYGO_T_PicoC3_firmware
+        path: ./bin/rp2/LILYGO_T_PicoC3/
 
   build_t-sim7000g:
     needs: build_t-call
@@ -61,6 +71,11 @@ jobs:
       run: |
         cp config_T-SIM7000G config
         make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: LILYGO_T-SIM7000G_firmware
+        path: ./bin/esp32/LILYGO_T-SIM7000G/
 
   build_t5-47:
     needs: build_t-call
@@ -77,6 +92,11 @@ jobs:
       run: |
         cp config_T5-4.7 config
         make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: LILYGO_T5-4.7_firmware
+        path: ./bin/esp32/LILYGO_T5-4.7/
 
   build_t5-47-plus:
     needs: build_t-call
@@ -93,3 +113,50 @@ jobs:
       run: |
         cp config_T5-4.7-Plus config
         make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: LILYGO_T5-4.7-PLUS_firmware
+        path: ./bin/esp32s3/LILYGO_T5-4.7-PLUS/
+
+  build_t-display:
+    needs: build_t-call
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - uses: actions/download-artifact@v2
+      with:
+        name: dl
+        path: dl/
+    - name: Build T-Display
+      run: |
+        cp config_T-Display config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: LILYGO_T-Display_firmware
+        path: ./bin/esp32/LILYGO_T-Display/
+
+  build_t-displays3:
+    needs: build_t-call
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - uses: actions/download-artifact@v2
+      with:
+        name: dl
+        path: dl/
+    - name: Build T-DisplayS3
+      run: |
+        cp config_T-DisplayS3 config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: LILYGO_T-DisplayS3_firmware
+        path: ./bin/esp32s3/LILYGO_T-DisplayS3/
