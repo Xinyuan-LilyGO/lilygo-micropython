@@ -5,10 +5,12 @@ on:
     paths:
       - 'target/nrf/boards/LILYGO_T-Echo-circuitpythonL/**'
       - 'target/nrf/nrf.mk'
+      - '.github/workflows/t-echo.yml'
   pull_request:
     paths:
       - 'target/nrf/boards/LILYGO_T-Echo-circuitpython/**'
       - 'target/nrf/nrf.mk'
+      - '.github/workflows/t-echo.yml'
 
 jobs:
   build_t-echo:

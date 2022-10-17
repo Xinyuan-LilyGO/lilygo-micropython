@@ -7,11 +7,13 @@ on:
       - 'micropython/**'
       - 'extmod/**'
       - 'libs/**'
+      - '.github/workflows/master.yml'
   pull_request:
     paths:
       - 'include'
       - 'micropython'
       - 'libs/**'
+      - '.github/workflows/master.yml'
 
 jobs:
   build_t-call:

@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - 'circuitpython/**'
+      - '.github/workflows/circuitpython.yml'
   pull_request:
     paths:
       - 'circuitpython/**'
+      - '.github/workflows/circuitpython.yml'
 
 jobs:
   build_t-echo:

@@ -5,10 +5,12 @@ on:
     paths:
       - 'target/esp32s3/boards/LILYGO_T-DisplayS3/**'
       - 'target/esp32s3/esp32s3.mk'
+      - '.github/workflows/t-displays3.yml'
   pull_request:
     paths:
       - 'target/esp32s3/boards/LILYGO_T-DisplayS3/**'
       - 'target/esp32s3/esp32s3.mk'
+      - '.github/workflows/t-displays3.yml'
 
 jobs:
   build_t-displays3:

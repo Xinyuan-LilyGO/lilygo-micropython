@@ -5,10 +5,12 @@ on:
     paths:
       - 'target/esp32/boards/LILYGO_T-SIM7000G/**'
       - 'target/esp32/esp32.mk'
+      - '.github/workflows/t-sim7000g.yml'
   pull_request:
     paths:
       - 'target/esp32/boards/LILYGO_T-SIM7000G/**'
       - 'target/esp32/esp32.mk'
+      - '.github/workflows/t-sim7000g.yml'
 
 jobs:
   build_t-sim7000g:

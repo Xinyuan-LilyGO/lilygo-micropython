@@ -5,10 +5,12 @@ on:
     paths:
       - 'target/rp2/boards/LILYGO_T_PicoC3/**'
       - 'target/rp2/rp2.mk'
+      - '.github/workflows/t-picoc3.yml'
   pull_request:
     paths:
       - 'target/rp2/boards/LILYGO_T_PicoC3/**'
       - 'target/rp2/rp2.mk'
+      - '.github/workflows/t-picoc3.yml'
 
 jobs:
   build_t-picoc3:

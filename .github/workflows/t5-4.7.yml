@@ -5,10 +5,12 @@ on:
     paths:
       - 'target/esp32/boards/LILYGO_T5-4.7/**'
       - 'target/esp32/esp32.mk'
+      - '.github/workflows/t5-4.7.yml'
   pull_request:
     paths:
       - 'target/esp32/boards/LILYGO_T5-4.7/**'
       - 'target/esp32/esp32.mk'
+      - '.github/workflows/t5-4.7.yml'
 
 jobs:
   build_t5-47:

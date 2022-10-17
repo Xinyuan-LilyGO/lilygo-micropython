@@ -5,10 +5,12 @@ on:
     paths:
       - 'target/esp32/boards/LILYGO_T-CALL/**'
       - 'target/esp32/esp32.mk'
+      - '.github/workflows/t-call.yml'
   pull_request:
     paths:
       - 'target/esp32/boards/LILYGO_T-CALL/**'
       - 'target/esp32/esp32.mk'
+      - '.github/workflows/t-call.yml'
 
 jobs:
   build_t-call:
