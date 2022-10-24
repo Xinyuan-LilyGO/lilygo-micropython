@@ -39,7 +39,7 @@ def setup():
     with open("boot.py", "w") as f:
         f.write(
             """\
-import st7789
+import lcd
 from machine import Pin
 import logo
 import gc
@@ -47,7 +47,7 @@ import time
 
 gc.enable()
 
-i8080 = st7789.I8080(data=(Pin(39), Pin(40), Pin(41), Pin(42), Pin(45), Pin(46), Pin(47), Pin(48)),
+i8080 = lcd.I8080(data=(Pin(39), Pin(40), Pin(41), Pin(42), Pin(45), Pin(46), Pin(47), Pin(48)),
                      command=Pin(7),
                      write=Pin(8),
                      read=Pin(9),
@@ -60,7 +60,7 @@ i8080 = st7789.I8080(data=(Pin(39), Pin(40), Pin(41), Pin(42), Pin(45), Pin(46),
                      cmd_bits=8,
                      param_bits=8)
 
-st = st7789.ST7789(i8080, reset=Pin(5))
+st = lcd.ST7789(i8080, reset=Pin(5))
 
 st.reset()
 st.init()
