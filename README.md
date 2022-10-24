@@ -11,10 +11,14 @@
   - [3.3 T-PicoC3](#t-picoc3)
   - [3.4 T5-4.7 Plus](#t5-47-plus)
   - [3.5 T-Echo](#t-echo)
+  - [3.6 T-Display](#t-display)
+  - [3.7 T-DisplayS3](#t-displays3)
+  - [3.8 T-RGB](#t-rgb)
 - [4. Modules](#modules)
   - [4.1 Display Module](#display-module)
 - [5. Interesting Project](#interesting-project)
-- [6. Future plans](#future-plans)
+- [6. Issue](#issue)
+- [7. Future plans](#future-plans)
 
 ---
 
@@ -36,6 +40,8 @@ sudo apt-get install git make python3 python3-pip cmake quilt
 - LilyGo T-PicoC3
 - LilyGo T5-4.7 Plus (esp32s3)
 - LilyGo T-Echo
+- LilyGo T-Display
+- LilyGo T-DisplayS3
 
 ## Build
 
@@ -96,6 +102,27 @@ To use micropython, you need to modify the config file:
 +# CONFIG_MICROPYTHON_CORE=circuitpython
 ```
 
+### T-Display
+
+```shell
+$ cp config_T-Display config
+$ make
+```
+
+### T-DisplayS3
+
+```shell
+$ cp config_T-DisplayS3 config
+$ make
+```
+
+### T-RGB
+
+```shell
+$ cp config_T-RGB config
+$ make
+```
+
 ## Modules
 
 ### Display Module
@@ -103,10 +130,33 @@ To use micropython, you need to modify the config file:
 - [epd](./extmod/display/epd/README.md): [LilyGo-EPD47](https://github.com/Xinyuan-LilyGO/LilyGo-EPD47) using in micropython.
 - [framebuf1](./extmod/display/framebuf1/): This module provides a general frame buffer which can be used to epd module.
 - [st7789](./extmod/display/st7789/): Fast MicroPython driver for ST7789 display module written in C.
+- [bma](./extmod/sensor/bma/): micropython driver library for bma423
+- [lcd](./extmod/display/lcd/): Driver library supporting I8080 and RGB interface
 
 ## Interesting Project
 
 [LilyGo-EPD-4-7-OWM-Weather-Display](https://github.com/Xinyuan-LilyGO/LilyGo-EPD-4-7-OWM-Weather-Display/tree/web/micropython): Using the LilyGo EPD 4.7" display to show OWM Weather Data
+
+## Issue
+
+### 1. Compilation error caused by ninja
+
+    Compilation gives the following error:
+
+    ```
+    ninja: build stopped: subcommand failed.
+    ninja failed with exit code 1
+    make[1]: *** [Makefile:42: all] Error 2
+    make[1]: Leaving directory '/home/scruss/c/lilygo-micropython/build_dir/esp32s3/micropython/ports/esp32'
+    make: *** [Makefile:36: all] Error 2
+    ```
+
+    Please uninstall ninja and try to compile again
+
+    ```shell
+    sudo apt remove ninja-build
+    rm build_dir -rf
+    ```
 
 ## Future plans
 
