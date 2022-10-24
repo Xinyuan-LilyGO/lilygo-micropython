@@ -1,30 +1,30 @@
-name: T5-4.7 PLUS CI
+name: T-RGB CI
 
 on:
   push:
     paths:
-      - 'target/esp32s3/boards/LILYGO_T5-4.7-PLUS/**'
+      - 'target/esp32s3/boards/LILYGO_T-/**'
       - 'target/esp32s3/esp32s3.mk'
-      - '.github/workflows/t5-4.7-plus.yml'
+      - '.github/workflows/t-displays3.yml'
   pull_request:
     paths:
-      - 'target/esp32s3/boards/LILYGO_T5-4.7-PLUS/**'
+      - 'target/esp32s3/boards/LILYGO_T-RGB/**'
       - 'target/esp32s3/esp32s3.mk'
-      - '.github/workflows/t5-4.7-plus.yml'
+      - '.github/workflows/t-displays3.yml'
 
 jobs:
-  build_t5-47-plus:
+  build_t-displays3:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
     - name: Install packages
       run: sudo apt-get install git make python3 python3-pip cmake quilt
-    - name: Build T5-4.7 Plus
+    - name: Build T-RGB
       run: |
-        cp config_T5-4.7-Plus config
+        cp config_T-RGB config
         make
     - name: Deliver firmware
       uses: actions/upload-artifact@v2
       with:
-        name: LILYGO_T5-4.7-PLUS_firmware
-        path: ./bin/esp32s3/LILYGO_T5-4.7-PLUS/
+        name: LILYGO_T-RGB_firmware
+        path: ./bin/esp32s3/LILYGO_T-RGB/

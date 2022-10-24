@@ -19,7 +19,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install packages
       run: sudo apt-get install git make python3 python3-pip cmake quilt
-    - name: Build T-Call
+    - name: Build T-DisplayS3
       run: |
         cp config_T-DisplayS3 config
         make

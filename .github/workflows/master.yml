@@ -162,3 +162,24 @@ jobs:
       with:
         name: LILYGO_T-DisplayS3_firmware
         path: ./bin/esp32s3/LILYGO_T-DisplayS3/
+
+  build_t-rgb:
+    needs: build_t-call
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - uses: actions/download-artifact@v2
+      with:
+        name: dl
+        path: dl/
+    - name: Build T-RGB
+      run: |
+        cp config_T-RGB config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: LILYGO_T-RGB_firmware
+        path: ./bin/esp32s3/LILYGO_T-RGB/
