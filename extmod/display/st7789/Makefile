@@ -3,7 +3,7 @@ define st7789/info
   PKG_NAME:=st7789
   PKG_SOURCE_URL:=https://github.com/russhughes/st7789_mpy.git
   PKG_SOURCE_PROTO:=git
-  PKG_SOURCE_VERSION:=master
+  PKG_SOURCE_VERSION:=f45a298dfa1119f584bcf218ac600f7a897647f4
   PKG_SOURCE_MD5:=
 endef
 
