@@ -1,0 +1,18 @@
+{
+    "deploy": [
+        "../deploy.md"
+    ],
+    "docs": "",
+    "features": [
+        "BLE",
+        "WiFi"
+    ],
+    "images": [
+        "generic_s3.jpg"
+    ],
+    "mcu": "esp32s3",
+    "product": "T-RGB (SPIRAM)",
+    "thumbnail": "",
+    "url": "https://www.aliexpress.us/item/3256804592227662.html",
+    "vendor": "LILYGO"
+}
