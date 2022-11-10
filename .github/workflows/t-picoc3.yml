@@ -19,10 +19,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install packages
       run: sudo apt-get install git make python3 python3-pip cmake quilt
-    - uses: actions/download-artifact@v2
-      with:
-        name: dl
-        path: dl/
     - name: Build T-PicoC3
       run: |
         cp config_T-PicoC3 config
