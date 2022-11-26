@@ -14,6 +14,7 @@
   - [3.6 T-Display](#t-display)
   - [3.7 T-DisplayS3](#t-displays3)
   - [3.8 T-RGB](#t-rgb)
+  - [3.9 T7-S3](#t7-s3)
 - [4. Modules](#modules)
   - [4.1 Display Module](#display-module)
 - [5. Interesting Project](#interesting-project)
@@ -34,14 +35,16 @@ sudo apt-get install git make python3 python3-pip cmake quilt
 
 ## Supported Boards
 
-- LilyGo T-SIM7000G
-- LilyGo T5-4.7
-- LilyGo T-T-CALL SIM800
-- LilyGo T-PicoC3
-- LilyGo T5-4.7 Plus (esp32s3)
-- LilyGo T-Echo
-- LilyGo T-Display
-- LilyGo T-DisplayS3
+- LILYGO T-SIM7000G
+- LILYGO T5-4.7
+- LILYGO T-T-CALL SIM800
+- LILYGO T-PicoC3
+- LILYGO T5-4.7 Plus (esp32s3)
+- LILYGO T-Echo
+- LILYGO T-Display
+- LILYGO T-DisplayS3
+- LILYGO T-RGB
+- LILYGO T7-S3
 
 ## Build
 
@@ -120,6 +123,13 @@ $ make
 
 ```shell
 $ cp config_T-RGB config
+$ make
+```
+
+### T7-S3
+
+```shell
+$ cp config_T7-S3 config
 $ make
 ```
 
