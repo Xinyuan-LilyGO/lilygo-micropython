@@ -52,7 +52,6 @@ i8080 = lcd.I8080(data=(Pin(39), Pin(40), Pin(41), Pin(42), Pin(45), Pin(46), Pi
                      write=Pin(8),
                      read=Pin(9),
                      cs=Pin(6),
-                     backlight=Pin(38),
                      pclk=2 * 1000 * 1000,
                      width=320,
                      height=170,
@@ -60,7 +59,7 @@ i8080 = lcd.I8080(data=(Pin(39), Pin(40), Pin(41), Pin(42), Pin(45), Pin(46), Pi
                      cmd_bits=8,
                      param_bits=8)
 
-st = lcd.ST7789(i8080, reset=Pin(5))
+st = lcd.ST7789(i8080, reset=Pin(5), backlight=Pin(38))
 
 st.reset()
 st.init()
