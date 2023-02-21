@@ -13,7 +13,7 @@ on:
       - '.github/workflows/t-displays3.yml'
 
 jobs:
-  build_t-displays3:
+  build_t7-s3:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2

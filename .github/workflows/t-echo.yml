@@ -1,30 +1,26 @@
-# name: T-Echo CI
+name: T-Echo CI
 
-# on:
-#   push:
-#     paths:
-#       - 'target/nrf/boards/LILYGO_T-Echo-circuitpythonL/**'
-#       - 'target/nrf/nrf.mk'
-#       - '.github/workflows/t-echo.yml'
-#   pull_request:
-#     paths:
-#       - 'target/nrf/boards/LILYGO_T-Echo-circuitpython/**'
-#       - 'target/nrf/nrf.mk'
-#       - '.github/workflows/t-echo.yml'
+on:
+  push:
+    paths:
+      - ''
+  pull_request:
+    paths:
+      - ''
 
-# jobs:
-#   build_t-echo:
-#     runs-on: ubuntu-20.04
-#     steps:
-#     - uses: actions/checkout@v2
-#     - name: Install packages
-#       run: sudo apt-get install git make python3 python3-pip cmake quilt
-#     - name: Build T-Echo
-#       run: |
-#         cp config_T-Echo config
-#         make
-#     - name: Deliver firmware
-#       uses: actions/upload-artifact@v2
-#       with:
-#         name: LILYGO_T-Echo_firmware
-#         path: ./bin/nrf/LILYGO_T-Echo/
+jobs:
+  build_t-echo:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T-Echo
+      run: |
+        cp config_T-Echo config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: LILYGO_T-Echo_firmware
+        path: ./bin/nrf/LILYGO_T-Echo/

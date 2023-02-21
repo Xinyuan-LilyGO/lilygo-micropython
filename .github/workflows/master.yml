@@ -204,3 +204,24 @@ jobs:
       with:
         name: LILYGO_T7-S3_firmware
         path: ./bin/esp32s3/LILYGO_T7-S3/
+
+  build_t-displays3-amoled:
+    needs: build_t-call
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - uses: actions/download-artifact@v3
+      with:
+        name: dl
+        path: dl/
+    - name: Build T-DisplayS3-AMOLED
+      run: |
+        cp config_T-DisplayS3-AMOLED config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: LILYGO_T-DisplayS3-AMOLED_firmware
+        path: ./bin/esp32s3/LILYGO_T-DisplayS3-AMOLED/

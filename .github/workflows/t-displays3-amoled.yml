@@ -1,0 +1,30 @@
+name: T-DisplayS3-AMOLED CI
+
+on:
+  push:
+    paths:
+      - 'target/esp32s3/boards/LILYGO_T-DisplayS3-AMOLED/**'
+      - 'target/esp32s3/esp32s3.mk'
+      - '.github/workflows/t-displays3.yml'
+  pull_request:
+    paths:
+      - 'target/esp32s3/boards/LILYGO_T-DisplayS3-AMOLED/**'
+      - 'target/esp32s3/esp32s3.mk'
+      - '.github/workflows/t-displays3.yml'
+
+jobs:
+  build_t-displays3-amoled:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T-DisplayS3-AMOLED
+      run: |
+        cp config_T-DisplayS3-AMOLED config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: LILYGO_T-DisplayS3-AMOLED_firmware
+        path: ./bin/esp32s3/LILYGO_T-DisplayS3-AMOLED/
