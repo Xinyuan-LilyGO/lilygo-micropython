@@ -22,3 +22,7 @@ endif()
 if(EXTMOD_BMA)
 include(${CMAKE_CURRENT_LIST_DIR}/sensor/bma/src/micropython.cmake)
 endif()
+
+if(EXTMOD_FRAMEBUF_PLUS)
+include(${CMAKE_CURRENT_LIST_DIR}/display/framebuf_plus/src/micropython.cmake)
+endif()
