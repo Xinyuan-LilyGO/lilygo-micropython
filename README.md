@@ -15,6 +15,7 @@
   - [3.7 T-DisplayS3](#t-displays3)
   - [3.8 T-RGB](#t-rgb)
   - [3.9 T7-S3](#t7-s3)
+  - [3.10 T-DisplayS3-AMOLED](#t-displays3-amoled)
 - [4. Modules](#modules)
   - [4.1 Display Module](#display-module)
 - [5. Interesting Project](#interesting-project)
@@ -45,6 +46,7 @@ sudo apt-get install git make python3 python3-pip cmake quilt
 - LILYGO T-DisplayS3
 - LILYGO T-RGB
 - LILYGO T7-S3
+- LILYGO T-DisplayS3-AMOLED
 
 ## Build
 
@@ -133,6 +135,13 @@ $ cp config_T7-S3 config
 $ make
 ```
 
+### T-DisplayS3-AMOLED
+
+```shell
+$ cp config_T-DisplayS3-AMOLED config
+$ make
+```
+
 ## Modules
 
 ### Display Module
@@ -142,6 +151,7 @@ $ make
 - [st7789](./extmod/display/st7789/): Fast MicroPython driver for ST7789 display module written in C.
 - [bma](./extmod/sensor/bma/): micropython driver library for bma423
 - [lcd](./extmod/display/lcd/): Driver library supporting I8080 and RGB interface
+- [framebuf_plus](extmod/display/framebuf_plus): Added gfx font support on the basis of [framebuf](https://docs.micropython.org/en/latest/library/framebuf.html).
 
 ## Interesting Project
 
