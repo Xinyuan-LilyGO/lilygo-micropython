@@ -123,7 +123,7 @@ def config():
     del i2c
     del xl
     gc.collect()
-    return lcd.RGB(data = (machine.Pin(7),   \
+    return lcd.DPI(data = (machine.Pin(7),   \
                            machine.Pin(6),   \
                            machine.Pin(5),   \
                            machine.Pin(3),   \
