@@ -16,7 +16,7 @@ jobs:
   build_t-sim7000g:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install packages
       run: sudo apt-get install git make python3 python3-pip cmake quilt
     - name: Build T-SIM7000G
@@ -24,7 +24,7 @@ jobs:
         cp config_T-SIM7000G config
         make
     - name: Deliver firmware
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: LILYGO_T-SIM7000G_firmware
         path: ./bin/esp32/LILYGO_T-SIM7000G/

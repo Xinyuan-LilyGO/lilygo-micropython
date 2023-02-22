@@ -13,10 +13,10 @@ on:
       - '.github/workflows/t-displays3.yml'
 
 jobs:
-  build_t-displays3:
+  build_t-rgb:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install packages
       run: sudo apt-get install git make python3 python3-pip cmake quilt
     - name: Build T-RGB
@@ -24,7 +24,7 @@ jobs:
         cp config_T-RGB config
         make
     - name: Deliver firmware
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: LILYGO_T-RGB_firmware
         path: ./bin/esp32s3/LILYGO_T-RGB/
