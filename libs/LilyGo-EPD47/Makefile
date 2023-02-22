@@ -7,7 +7,7 @@ define LilyGo-EPD47/info
   PKG_NAME:=LilyGo-EPD47
   PKG_SOURCE_URL:=https://github.com/Xinyuan-LilyGO/LilyGo-EPD47.git
   PKG_SOURCE_PROTO:=git
-  PKG_SOURCE_VERSION:=esp32s3
+  PKG_SOURCE_VERSION:=deae2d2cbfb062198e6b4647d29eab6bc4d80d8a
   PKG_SOURCE_MD5:=505c09c8fdef57c04180f2b1676ccab8
 endef
 
