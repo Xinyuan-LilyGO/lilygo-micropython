@@ -22,6 +22,7 @@ endef
 define rp2/compile
 	make -C $(TARGET_BUILD_DIR)/micropython/mpy-cross && \
 	cd $(TARGET_BUILD_DIR)/micropython/ports/rp2 && \
+	make submodules && \
 	make MICROPY_BOARD_DIR=$(TOP_DIR)/target/$(TARGET)/boards/$(BOARD) \
 			BOARD=$(BOARD) \
 			BUILD=$(TARGET_BUILD_DIR)/build-$(BOARD) \

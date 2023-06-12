@@ -5,6 +5,7 @@ define bma/info
   PKG_SOURCE_PROTO:=git
   PKG_SOURCE_VERSION:=master
   PKG_SOURCE_MD5:=
+  PKG_SOURCE_OPT:=--depth 1 --branch master
 endef
 
 include $(INCLUDE_DIR)/download.mk
