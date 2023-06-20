@@ -31,7 +31,7 @@ To compile with lilygo-micropython you need to get the following packages. The c
 - Ubuntu and Debian:
 
 ```
-sudo apt-get install git make python3 python3-pip cmake quilt
+sudo apt-get install git make python3 python3-pip cmake quilt libusb-1.0-0-dev libusb-dev libudev-dev
 ```
 
 ## Supported Boards
