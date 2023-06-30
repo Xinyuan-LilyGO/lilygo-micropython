@@ -1,0 +1,13 @@
+Index: esp-idf/tools/idf_py_actions/constants.py
+===================================================================
+--- esp-idf.orig/tools/idf_py_actions/constants.py
++++ esp-idf/tools/idf_py_actions/constants.py
+@@ -29,7 +29,7 @@ GENERATORS = collections.OrderedDict([
+         'verbose_flag': '-v'
+     }),
+     (MAKE_GENERATOR, {
+-        'command': [MAKE_CMD, '-j', str(multiprocessing.cpu_count() + 2)],
++        'command': [MAKE_CMD, '-j', "1"],
+         'version': [MAKE_CMD, '--version'],
+         'dry_run': [MAKE_CMD, '-n'],
+         'verbose_flag': 'VERBOSE=1',

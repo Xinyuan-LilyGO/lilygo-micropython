@@ -15,6 +15,7 @@ endef
 define esp32s3/prereq
 	$(eval $(esp32s3/info))
 	$(call Package/prereq,$(TARGET_BUILD_DIR))
+	$(call Package/patches,$(TARGET_BUILD_DIR)/$(PKG_NAME),$(TOP_DIR)/target/esp32s3/patches)
 endef
 
 ##
