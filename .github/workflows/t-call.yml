@@ -17,6 +17,12 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
+    - name: Cache dl
+      id: cache-dl
+      uses: actions/cache@v3
+      with:
+        path: dl/
+        key: ${{ runner.os }}-${{ hashFiles('**/dl') }}
     - name: Install packages
       run: sudo apt-get install git make python3 python3-pip cmake quilt
     - name: Build T-Call
