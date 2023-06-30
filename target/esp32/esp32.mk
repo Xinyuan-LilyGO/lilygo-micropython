@@ -6,9 +6,9 @@ define esp32/info
 	PKG_NAME:=esp-idf
 	PKG_SOURCE_URL:=https://github.com/espressif/esp-idf.git
 	PKG_SOURCE_PROTO:=git
-	PKG_SOURCE_VERSION:=v4.4.4
+	PKG_SOURCE_VERSION:=v4.4
 	PKG_SOURCE_MD5:=9416da50831df089fcf60db5fc2750f0
-	PKG_SOURCE_OPT:=--depth 1 --branch v4.4.4 --recurse-submodules
+	PKG_SOURCE_OPT:=--depth 1 --branch v4.4 --recurse-submodules
 endef
 
 # $(call DownloadMethod/git,$(PKG_NAME),$(PKG_SOURCE_URL),$(PKG_SOURCE_VERSION)) ;
