@@ -18,9 +18,10 @@ define DownloadMethod/git
 	rm -rf $(1) && \
 	[ \! -d $(1) ] && \
 	git clone $(4) $(2) $(1) && \
-	(cd $(1) && git checkout $(3) && git submodule update) && \
+	(cd $(1) && git checkout $(3)) && \
 	echo "Packing checkout..." && \
-	tar czf $(DL_DIR)/$(1)-$(3).tar.gz $(1)
+	tar czf $(DL_DIR)/$(1)-$(3).tar.gz $(1) && \
+	rm -rf $(1)
 endef
 
 

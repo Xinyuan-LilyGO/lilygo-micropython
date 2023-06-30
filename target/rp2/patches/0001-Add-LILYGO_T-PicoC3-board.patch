@@ -1,7 +1,7 @@
-Index: micropython/lib/pico-sdk/src/boards/include/boards/lilygo_t_picoc3.h
+Index: pico-sdk/src/boards/include/boards/lilygo_t_picoc3.h
 ===================================================================
 --- /dev/null
-+++ micropython/lib/pico-sdk/src/boards/include/boards/lilygo_t_picoc3.h
++++ pico-sdk/src/boards/include/boards/lilygo_t_picoc3.h
 @@ -0,0 +1,84 @@
 +/*
 + * Copyright (c) 2020 Raspberry Pi (Trading) Ltd.

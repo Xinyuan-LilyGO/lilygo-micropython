@@ -8,13 +8,14 @@ define esp32s3/info
 	PKG_SOURCE_PROTO:=git
 	PKG_SOURCE_VERSION:=v4.4.4
 	PKG_SOURCE_MD5:=9416da50831df089fcf60db5fc2750f0
-	PKG_SOURCE_OPT:=--recurse-submodules
+	PKG_SOURCE_OPT:=--depth 1 --branch v4.4.4 --recurse-submodules
 endef
 
 # $(call DownloadMethod/git,$(PKG_NAME),$(PKG_SOURCE_URL),$(PKG_SOURCE_VERSION)) ;
 define esp32s3/prereq
 	$(eval $(esp32s3/info))
 	$(call Package/prereq,$(TARGET_BUILD_DIR))
+	$(call Package/patches,$(TARGET_BUILD_DIR)/$(PKG_NAME),$(TOP_DIR)/target/esp32s3/patches)
 endef
 
 ##
@@ -23,6 +24,7 @@ endef
 define esp32s3/compile
 	$(TARGET_BUILD_DIR)/esp-idf/install.sh
 	. $(TARGET_BUILD_DIR)/esp-idf/export.sh && \
+	make -C $(TARGET_BUILD_DIR)/micropython/ports/esp32 submodules && \
 	make -C $(TARGET_BUILD_DIR)/micropython/ports/esp32 \
 			MICROPY_BOARD_DIR=$(TOP_DIR)/target/$(TARGET)/boards/$(BOARD) \
 			BOARD=$(BOARD) BUILD=$(TARGET_BUILD_DIR)/build-$(BOARD) \

@@ -1,0 +1,231 @@
+name: Nightly Build
+
+on:
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build_t-call:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Cache dl
+      id: cache-dl
+      uses: actions/cache@v3
+      with:
+        path: dl/
+        key: ${{ runner.os }}-${{ hashFiles('**/dl') }}
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T-Call
+      run: |
+        cp config_T-CALL config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: LILYGO_T-CALL_firmware
+        path: ./bin/esp32/LILYGO_T-CALL/
+
+  build_t-picoc3:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Cache dl
+      id: cache-dl
+      uses: actions/cache@v3
+      with:
+        path: dl/
+        key: ${{ runner.os }}-${{ hashFiles('**/dl') }}
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T-PicoC3
+      run: |
+        cp config_T-PicoC3 config
+        sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: LILYGO_T_PicoC3_firmware
+        path: ./bin/rp2/LILYGO_T_PicoC3/
+
+  build_t-sim7000g:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Cache dl
+      id: cache-dl
+      uses: actions/cache@v3
+      with:
+        path: dl/
+        key: ${{ runner.os }}-${{ hashFiles('**/dl') }}
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T-SIM7000G
+      run: |
+        cp config_T-SIM7000G config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: LILYGO_T-SIM7000G_firmware
+        path: ./bin/esp32/LILYGO_T-SIM7000G/
+
+  build_t5-47:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Cache dl
+      id: cache-dl
+      uses: actions/cache@v3
+      with:
+        path: dl/
+        key: ${{ runner.os }}-${{ hashFiles('**/dl') }}
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T5-4.7
+      run: |
+        cp config_T5-4.7 config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: LILYGO_T5-4.7_firmware
+        path: ./bin/esp32/LILYGO_T5-4.7/
+
+  build_t5-47-plus:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Cache dl
+      id: cache-dl
+      uses: actions/cache@v3
+      with:
+        path: dl/
+        key: ${{ runner.os }}-${{ hashFiles('**/dl') }}
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T5-4.7 Plus
+      run: |
+        cp config_T5-4.7-Plus config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: LILYGO_T5-4.7-PLUS_firmware
+        path: ./bin/esp32s3/LILYGO_T5-4.7-PLUS/
+
+  build_t-display:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Cache dl
+      id: cache-dl
+      uses: actions/cache@v3
+      with:
+        path: dl/
+        key: ${{ runner.os }}-${{ hashFiles('**/dl') }}
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T-Display
+      run: |
+        cp config_T-Display config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: LILYGO_T-Display_firmware
+        path: ./bin/esp32/LILYGO_T-Display/
+
+  build_t-displays3:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Cache dl
+      id: cache-dl
+      uses: actions/cache@v3
+      with:
+        path: dl/
+        key: ${{ runner.os }}-${{ hashFiles('**/dl') }}
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T-DisplayS3
+      run: |
+        cp config_T-DisplayS3 config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: LILYGO_T-DisplayS3_firmware
+        path: ./bin/esp32s3/LILYGO_T-DisplayS3/
+
+  build_t-rgb:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Cache dl
+      id: cache-dl
+      uses: actions/cache@v3
+      with:
+        path: dl/
+        key: ${{ runner.os }}-${{ hashFiles('**/dl') }}
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T-RGB
+      run: |
+        cp config_T-RGB config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: LILYGO_T-RGB_firmware
+        path: ./bin/esp32s3/LILYGO_T-RGB/
+
+  build_t7-s3:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Cache dl
+      id: cache-dl
+      uses: actions/cache@v3
+      with:
+        path: dl/
+        key: ${{ runner.os }}-${{ hashFiles('**/dl') }}
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T7-S3
+      run: |
+        cp config_T7-S3 config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: LILYGO_T7-S3_firmware
+        path: ./bin/esp32s3/LILYGO_T7-S3/
+
+  build_t-displays3-amoled:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Cache dl
+      id: cache-dl
+      uses: actions/cache@v3
+      with:
+        path: dl/
+        key: ${{ runner.os }}-${{ hashFiles('**/dl') }}
+    - name: Install packages
+      run: sudo apt-get install git make python3 python3-pip cmake quilt
+    - name: Build T-DisplayS3-AMOLED
+      run: |
+        cp config_T-DisplayS3-AMOLED config
+        make
+    - name: Deliver firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: LILYGO_T-DisplayS3-AMOLED_firmware
+        path: ./bin/esp32s3/LILYGO_T-DisplayS3-AMOLED/
